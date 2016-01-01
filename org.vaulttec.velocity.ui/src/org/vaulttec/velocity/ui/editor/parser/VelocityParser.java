@@ -62,8 +62,15 @@ public class VelocityParser extends RuntimeInstance {
 			setProperty(RUNTIME_LOG_LOGSYSTEM_CLASS,
 						NullLogChute.class.getCanonicalName());
 
-			// Call super implementation
-			super.init();
+			// Call super implementation - Massage TCCL to deal with bug in m2e
+			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=396554)
+			ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(RuntimeInstance.class.getClassLoader());
+			try {
+				super.init();
+			} finally {
+				Thread.currentThread().setContextClassLoader(oldClassLoader);
+			}
 
 			// Initialize user directives
     		initializeUserDirectives();
