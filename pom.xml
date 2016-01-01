@@ -120,6 +120,15 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+					<configuration>
+						<!--  we are using the GitHub site-maven-plugin instead -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho-version}</version>
