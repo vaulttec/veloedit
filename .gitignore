@@ -1,0 +1,6 @@
+.DS_Store
+target/
+.settings/
+.classpath
+.project
+velocityui.jar
