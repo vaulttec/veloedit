@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%editorName"
+            icon="icons/full/obj16/vsl_file.gif"
+            extensions="%fileExtensions"
+            contributorClass="org.vaulttec.velocity.ui.editor.VelocityEditorActionContributor"
+            class="org.vaulttec.velocity.ui.editor.VelocityEditor"
+            id="org.vaulttec.velocity.ui.editor.VelocityEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <scope
+            name="%category.name"
+            parent="org.eclipse.jdt.ui.javaEditorScope"
+            description="%category.description"
+            id="org.vaulttec.velocity.ui.velocityEditorScope">
+      </scope>
+      <command
+            name="%command.gotoDefinition.name"
+            description="%command.gotoDefinition.description"
+            category="org.eclipse.ui.category.navigate"
+            id="org.vaulttec.velocity.ui.edit.goto.definition">
+      </command>
+      <keyBinding
+            string="F3"
+            scope="org.vaulttec.velocity.ui.velocityEditorScope"
+            command="org.vaulttec.velocity.ui.edit.goto.definition"
+            configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </keyBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%mainPreferencesName"
+            class="org.vaulttec.velocity.ui.preferences.VelocityPreferencePage"
+            id="org.vaulttec.velocity.ui.preferences">
+      </page>
+      <page
+            name="%libraryPreferencesName"
+            category="org.vaulttec.velocity.ui.preferences"
+            class="org.vaulttec.velocity.ui.preferences.LibraryPreferencePage"
+            id="org.vaulttec.velocity.ui.preferences.library">
+      </page>
+      <page
+            name="%editorPreferencesName"
+            category="org.vaulttec.velocity.ui.preferences"
+            class="org.vaulttec.velocity.ui.preferences.EditorPreferencePage"
+            id="org.vaulttec.velocity.ui.preferences.editor">
+      </page>
+   </extension>
+
+</plugin>

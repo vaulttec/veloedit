@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.vaulttec.velocity.feature"
+      label="Velocity UI"
+      version="1.0.6.qualifier"
+      provider-name="VaultTec.org">
+
+   <description url="https://github.com/vaulttec/veloedit">
+      This feature is an user interface for the template/scripting
+engine
+Velocity (http://jakarta.apache.org/velocity/).
+It consists of two plugins, one holds the velocity binaries and
+the other
+contains an editor for the Velocity template language.
+   </description>
+
+   <copyright>
+      Copyright 2015, VaultTec.org
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      Unless otherwise indicated, all Content made available by VaultTec.org
+is provided to you under the terms and conditions of the
+Eclipse Public License Version 1.0 (EPL).
+
+A copy of the EPL is provided with this Content and is also available
+at http://www.eclipse.org/legal/epl-v10.html.
+   </license>
+
+   <url>
+      <update label="Velocity Editor updates" url="https://raw.githubusercontent.com/vaulttec/iveloedit/updatesite/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.resources" match="compatible"/>
+      <import plugin="org.eclipse.ui" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.vaulttec.velocity.ui"
+         download-size="55"
+         install-size="65"
+         version="0.0.0"/>
+
+</feature>

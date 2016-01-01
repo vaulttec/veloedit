@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.vaulttec.velocity</groupId>
+		<artifactId>org.vaulttec.velocity.parent</artifactId>
+		<version>1.0.6-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.vaulttec.velocity.site</artifactId>
+	<packaging>eclipse-repository</packaging>
+	<name>org.vaulttec.velocity :: update site</name>
+
+	<build>
+		<plugins>
+			<!-- Deploying the p2 repository to a GitHub repository branch as described 
+				in http://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github/ -->
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<configuration>
+					<message>Velocity Editor Eclipse bundles ${project.version}</message>
+					<outputDirectory>${project.build.directory}/repository</outputDirectory>
+					<repositoryName>veloedit</repositoryName>
+					<repositoryOwner>vaulttec</repositoryOwner>
+					<branch>refs/heads/updatesite</branch>
+					<path></path>
+					<merge>false</merge>
+					<noJekyll>false</noJekyll>
+					<message>creates Velocity Editor Eclipse update site ${project.version}</message>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

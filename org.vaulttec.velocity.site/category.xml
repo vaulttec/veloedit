@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description>
+      This Update Site contains feature and plug-in versions for a Velocity UI.
+   </description>
+   <feature url="features/org.vaulttec.velocity.feature_0.0.0.jar" id="org.vaulttec.velocity.feature" version="0.0.0">
+      <category name="cat"/>
+   </feature>
+   <category-def name="cat" label="Velocity UI">
+      <description>
+         This category contains the plugins for the Velocity UI.
+      </description>
+   </category-def>
+</site>
