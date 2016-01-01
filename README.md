@@ -25,5 +25,5 @@ It uses the Velocity binaries (currently v1.7.0) to provide a Velocity-aware tex
 
 ## Installation
 
-Online updates are available on [https://raw.githubusercontent.com/vaulttec/iveloedit/updatesite/](https://raw.githubusercontent.com/vaulttec/iveloedit/updatesite/).
+Online updates are available on [https://raw.githubusercontent.com/vaulttec/veloedit/updatesite/](https://raw.githubusercontent.com/vaulttec/veloedit/updatesite/).
 Define a site bookmark in Eclipse's Update Manager view ([Screenshot](../images/screenshots/UpdateSiteBookmark.png?raw=true)), navigate to the update site via this bookmark ([Screenshot](../images/screenshots/UpdateSitePreview.png?raw=true)) and install the Velocity UI feature.
