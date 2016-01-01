@@ -1,7 +1,7 @@
 # Velocity UI for Eclipse
 
 This project leverages the [Eclipse platform](http://www.eclipse.org/) by adding support for the template/scripting
-engine [Apache Velocity](http://jakarta.apache.org/velocity/).
+engine [Apache Velocity](http://velocity.apache.org).
 
 It uses the Velocity binaries (currently v1.7.0) to provide a Velocity-aware text editor (associated to files with extensions `*.vsl` or `*.vm`) with outline view.
 
