@@ -9,9 +9,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.ui.editor.VelocityEditor;
 import org.vaulttec.velocity.ui.editor.actions.CollapseAllAction;
-import org.vaulttec.velocity.ui.model.ITreeNode;
 
 /**
  * A content outline page which represents the content of an Velocity template

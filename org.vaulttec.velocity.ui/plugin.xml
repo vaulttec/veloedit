@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
 
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="vsl, vm"
+            id="velocityTemplate"
+            name="%templateName"
+            priority="high">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.core.filebuffers.documentSetup">
+      <participant
+            class="org.vaulttec.velocity.ui.editor.VelocityDocumentSetupParticipant"
+            contentTypeId="org.vaulttec.velocity.ui.velocityTemplate">
+      </participant>
+   </extension>
      <extension
          point="org.eclipse.ui.editors">
       <editor
             name="%editorName"
             icon="icons/full/obj16/vsl_file.gif"
-            extensions="%fileExtensions"
             contributorClass="org.vaulttec.velocity.ui.editor.VelocityEditorActionContributor"
             class="org.vaulttec.velocity.ui.editor.VelocityEditor"
             id="org.vaulttec.velocity.ui.editor.VelocityEditor">
+         <contentTypeBinding
+               contentTypeId="org.vaulttec.velocity.ui.velocityTemplate">
+         </contentTypeBinding>
       </editor>
    </extension>
    <extension
@@ -32,6 +51,12 @@
             command="org.vaulttec.velocity.ui.edit.goto.definition"
             configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
       </keyBinding>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.vaulttec.velocity.ui.VelocityPreferenceInitializer">
+      </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

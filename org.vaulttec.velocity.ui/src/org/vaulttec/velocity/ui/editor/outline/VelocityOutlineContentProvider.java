@@ -6,8 +6,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.ui.editor.VelocityEditor;
-import org.vaulttec.velocity.ui.model.ITreeNode;
 
 public class VelocityOutlineContentProvider implements ITreeContentProvider {
 	public static final String VELOCITY_TEMPLATE = "__velocity_template";

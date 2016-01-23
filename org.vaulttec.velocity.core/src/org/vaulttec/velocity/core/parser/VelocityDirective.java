@@ -1,4 +1,4 @@
-package org.vaulttec.velocity.ui.editor.parser;
+package org.vaulttec.velocity.core.parser;
 
 import java.io.IOException;
 import java.io.Writer;

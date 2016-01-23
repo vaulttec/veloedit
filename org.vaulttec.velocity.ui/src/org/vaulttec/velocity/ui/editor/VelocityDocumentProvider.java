@@ -1,31 +1,25 @@
 package org.vaulttec.velocity.ui.editor;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.DefaultPartitioner;
-import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.editors.text.ForwardingDocumentProvider;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.vaulttec.velocity.ui.editor.text.IVelocityPartitions;
 import org.vaulttec.velocity.ui.editor.text.VelocityPartitionScanner;
 
-/** 
- * This class provides the IDocuments used by Velocity editors.
- * These IDocuments have an Velocity-aware partition scanner
- * (multi-line comments) attached.
+/**
+ * This class provides the {@link IDocument}s used by Velocity editors. These
+ * {@link IDocument}s have an Velocity-aware partition scanner (multi-line
+ * comments) attached.
+ * 
+ * @see VelocityPartitionScanner
  */
-public class VelocityDocumentProvider extends FileDocumentProvider {
+public class VelocityDocumentProvider extends TextFileDocumentProvider {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractDocumentProvider#createDocument(Object)
-	 */
-	protected IDocument createDocument(Object anElement) throws CoreException {
-		IDocument document = super.createDocument(anElement);
-		if (document != null) {
-			IDocumentPartitioner partitioner = new DefaultPartitioner(
-												new VelocityPartitionScanner(),
-												VelocityPartitionScanner.TYPES);
-			partitioner.connect(document);
-			document.setDocumentPartitioner(partitioner);
-		}
-		return document;
+	public VelocityDocumentProvider() {
+		IDocumentProvider provider = new TextFileDocumentProvider();
+		provider = new ForwardingDocumentProvider(IVelocityPartitions.VELOCITY_PARTITIONING,
+				new VelocityDocumentSetupParticipant(), provider);
+		setParentDocumentProvider(provider);
 	}
 }

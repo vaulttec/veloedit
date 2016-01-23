@@ -1,4 +1,4 @@
-package org.vaulttec.velocity.ui.editor.parser;
+package org.vaulttec.velocity.core.parser;
 
 /**
  * Container used to store Velocity macro information.

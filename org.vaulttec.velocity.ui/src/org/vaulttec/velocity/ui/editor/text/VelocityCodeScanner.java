@@ -13,10 +13,10 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordPatternRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
+import org.vaulttec.velocity.core.model.Directive;
 import org.vaulttec.velocity.ui.IColorConstants;
 import org.vaulttec.velocity.ui.VelocityColorProvider;
 import org.vaulttec.velocity.ui.editor.VelocityEditorEnvironment;
-import org.vaulttec.velocity.ui.model.Directive;
 
 public class VelocityCodeScanner extends RuleBasedScanner {
 

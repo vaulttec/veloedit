@@ -1,4 +1,4 @@
-package org.vaulttec.velocity.ui.model;
+package org.vaulttec.velocity.core.model;
 
 public abstract class AbstractTreeNode implements ITreeNode {
 	private ITreeNode fParent;

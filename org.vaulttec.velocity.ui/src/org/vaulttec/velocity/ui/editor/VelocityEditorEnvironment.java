@@ -2,9 +2,9 @@ package org.vaulttec.velocity.ui.editor;
 
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
+import org.vaulttec.velocity.core.VelocityCorePlugin;
+import org.vaulttec.velocity.core.parser.VelocityParser;
 import org.vaulttec.velocity.ui.VelocityColorProvider;
-import org.vaulttec.velocity.ui.VelocityPlugin;
-import org.vaulttec.velocity.ui.editor.parser.VelocityParser;
 import org.vaulttec.velocity.ui.editor.text.VelocityCodeScanner;
 import org.vaulttec.velocity.ui.editor.text.VelocityDoubleClickStrategy;
 import org.vaulttec.velocity.ui.editor.text.VelocityStringScanner;
@@ -18,7 +18,6 @@ import org.vaulttec.velocity.ui.editor.text.VelocityStringScanner;
  */
 public class VelocityEditorEnvironment {
 
-	private static VelocityParser fgVelocityParser;
 	private static VelocityColorProvider fgColorProvider;
 	private static RuleBasedScanner fgCodeScanner;
 	private static RuleBasedScanner fgStringScanner;
@@ -32,26 +31,10 @@ public class VelocityEditorEnvironment {
 	 */
 	public static void connect() {
 		if (++fgRefCount == 1) {
-			createVelocityParser();
 			fgColorProvider = new VelocityColorProvider();
 			fgCodeScanner = new VelocityCodeScanner(fgColorProvider);
 			fgStringScanner = new VelocityStringScanner(fgColorProvider);
 			fgDoubleClickStrategy = new VelocityDoubleClickStrategy();
-		}
-	}
-
-	/**
-	 * If an editor is connected then creates a new instance of the Velocity
-	 * parser and initializes it with data specified in Velocity preferences.
-	 */
-	public static void createVelocityParser() {
-		if (fgRefCount > 0) {
-			fgVelocityParser = new VelocityParser();
-			try {
-				fgVelocityParser.init();
-			} catch (Exception e) {
-				VelocityPlugin.log(e);
-			}
 		}
 	}
 
@@ -66,7 +49,6 @@ public class VelocityEditorEnvironment {
 			fgCodeScanner = null;
 			fgColorProvider.dispose();
 			fgColorProvider = null;
-			fgVelocityParser = null;
 		}
 	}
 
@@ -102,6 +84,6 @@ public class VelocityEditorEnvironment {
 	 * Returns the singleton Velocity parser.
 	 */
 	public static VelocityParser getParser() {
-		return fgVelocityParser;
+		return VelocityCorePlugin.getParser();
 	}
 }

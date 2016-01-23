@@ -17,10 +17,10 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFileEditorInput;
+import org.vaulttec.velocity.core.model.ITreeNode;
+import org.vaulttec.velocity.core.model.Template;
+import org.vaulttec.velocity.core.parser.NodeVisitor;
 import org.vaulttec.velocity.ui.VelocityPlugin;
-import org.vaulttec.velocity.ui.editor.parser.NodeVisitor;
-import org.vaulttec.velocity.ui.model.ITreeNode;
-import org.vaulttec.velocity.ui.model.Template;
 
 /**
  * Reconciler strategy which parses the whole editor's content (a Velocity
@@ -55,8 +55,7 @@ public class VelocityReconcilingStrategy implements IReconcilingStrategy {
 		Template template = null;
 		try {
 			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-			RuntimeInstance runtime =
-								 VelocityEditorEnvironment.getParser();
+			RuntimeInstance runtime = VelocityEditorEnvironment.getParser();
 			SimpleNode root = runtime.parse(reader, name);
 
 			// Create tree model			

@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -25,27 +27,19 @@ public class VelocityColorProvider implements IColorConstants {
 	private static final RGB RGB_REFERENCE = new RGB(220, 0, 0);
 	private static final RGB RGB_STRING_REFERENCE = new RGB(250, 10, 240);
 
-	protected Map fColorTable = new HashMap(10);
+	protected final Map<String, Color> colorTable = new HashMap<>(10);
 
 	/**
-	 * Set default colors in given preference store.
+	 * Set default colors in given preference node.
 	 */
-	public static void initializeDefaults(IPreferenceStore aStore) {
-		PreferenceConverter.setDefault(aStore,
-							 IPreferencesConstants.COLOR_DEFAULT, RGB_DEFAULT);
-		PreferenceConverter.setDefault(aStore,
-							 IPreferencesConstants.COLOR_COMMENT, RGB_COMMENT);
-		PreferenceConverter.setDefault(aStore,
-					 IPreferencesConstants.COLOR_DOC_COMMENT, RGB_DOC_COMMENT);
-		PreferenceConverter.setDefault(aStore,
-						 IPreferencesConstants.COLOR_DIRECTIVE, RGB_DIRECTIVE);
-		PreferenceConverter.setDefault(aStore,
-							   IPreferencesConstants.COLOR_STRING, RGB_STRING);
-		PreferenceConverter.setDefault(aStore,
-						 IPreferencesConstants.COLOR_REFERENCE, RGB_REFERENCE);
-		PreferenceConverter.setDefault(aStore,
-								  IPreferencesConstants.COLOR_STRING_REFERENCE,
-								  RGB_STRING_REFERENCE);
+	public static void initializeDefaults(IEclipsePreferences node) {
+		node.put(IPreferencesConstants.COLOR_DEFAULT, StringConverter.asString(RGB_DEFAULT));
+		node.put(IPreferencesConstants.COLOR_COMMENT, StringConverter.asString(RGB_COMMENT));
+		node.put(IPreferencesConstants.COLOR_DOC_COMMENT, StringConverter.asString(RGB_DOC_COMMENT));
+		node.put(IPreferencesConstants.COLOR_DIRECTIVE, StringConverter.asString(RGB_DIRECTIVE));
+		node.put(IPreferencesConstants.COLOR_STRING, StringConverter.asString(RGB_STRING));
+		node.put(IPreferencesConstants.COLOR_REFERENCE, StringConverter.asString(RGB_REFERENCE));
+		node.put(IPreferencesConstants.COLOR_STRING_REFERENCE, StringConverter.asString(RGB_STRING_REFERENCE));
 	}
 
 	/**
@@ -53,22 +47,18 @@ public class VelocityColorProvider implements IColorConstants {
 	 * found in color table then a new instance is created from according
 	 * preferences value and stored in color table.
 	 */
-	public Color getColor(String aName) {
-		Color color = (Color)fColorTable.get(aName);
+	public Color getColor(String name) {
+		Color color = colorTable.get(name);
 		if (color == null) {
-			IPreferenceStore store =
-							  VelocityPlugin.getDefault().getPreferenceStore();
-			RGB rgb = PreferenceConverter.getColor(store,
-								   IPreferencesConstants.PREFIX_COLOR + aName);
+			IPreferenceStore store = VelocityPlugin.getDefault().getPreferenceStore();
+			RGB rgb = PreferenceConverter.getColor(store, IPreferencesConstants.PREFIX_COLOR + name);
 			if (rgb != null) {
 				color = new Color(Display.getCurrent(), rgb);
 			} else {
-				color = Display.getCurrent().getSystemColor(
-													SWT.COLOR_LIST_FOREGROUND);
-				VelocityPlugin.logErrorMessage("Undefined color '" +
-											   aName + "'");
+				color = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+				VelocityPlugin.logErrorMessage("Undefined color '" + name + "'");
 			}
-			fColorTable.put(aName, color);
+			colorTable.put(name, color);
 		}
 		return color;
 	}
@@ -77,9 +67,9 @@ public class VelocityColorProvider implements IColorConstants {
 	 * Release all of the color resources held onto by the color provider.
 	 */
 	public void dispose() {
-		Iterator colors = fColorTable.values().iterator();
+		Iterator<Color> colors = colorTable.values().iterator();
 		while (colors.hasNext()) {
-			 ((Color)colors.next()).dispose();
+			colors.next().dispose();
 		}
 	}
 }

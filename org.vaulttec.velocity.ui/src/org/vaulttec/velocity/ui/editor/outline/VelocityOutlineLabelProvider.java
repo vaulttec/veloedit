@@ -1,10 +1,11 @@
 package org.vaulttec.velocity.ui.editor.outline;
 
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.vaulttec.velocity.core.model.Directive;
+import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.ui.VelocityPluginImages;
-import org.vaulttec.velocity.ui.model.Directive;
-import org.vaulttec.velocity.ui.model.ITreeNode;
 
 /**
  * Standard label provider for Velocity template elements.

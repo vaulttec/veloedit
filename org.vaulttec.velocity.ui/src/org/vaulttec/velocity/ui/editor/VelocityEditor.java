@@ -25,56 +25,34 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.vaulttec.velocity.core.model.ITreeNode;
+import org.vaulttec.velocity.core.parser.VelocityMacro;
 import org.vaulttec.velocity.ui.VelocityPlugin;
 import org.vaulttec.velocity.ui.editor.actions.GotoDefinitionAction;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionConstants;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionDefinitionIds;
 import org.vaulttec.velocity.ui.editor.outline.VelocityOutlinePage;
-import org.vaulttec.velocity.ui.editor.parser.VelocityMacro;
 import org.vaulttec.velocity.ui.editor.text.VelocityTextGuesser;
-import org.vaulttec.velocity.ui.model.ITreeNode;
-import org.vaulttec.velocity.ui.model.ModelTools;
 
-public class VelocityEditor extends /*Projection*/TextEditor {
+public class VelocityEditor extends TextEditor {
 	private static final String PREFIX = "VelocityEditor.";
 
-//	private AnnotationModel fAnnotationModel;
-	private ModelTools fModelTools;
-	private VelocityReconcilingStrategy fReconcilingStrategy;
-	private VelocityOutlinePage fOutlinePage;
+	private final ModelTools modelTools;
+	private final VelocityReconcilingStrategy reconcilingStrategy;
+	private VelocityOutlinePage outlinePage;
 
-	/** Last cursor position (line) handled in
-	 * <code>handleCursorPositionChanged()</code> */
-	private int fLastCursorLine;
+	/**
+	 * Last cursor position (line) handled in
+	 * <code>handleCursorPositionChanged()</code>
+	 */
+	private int lastCursorLine;
 
 	public VelocityEditor() {
-		fModelTools = new ModelTools(this);
-		fReconcilingStrategy = new VelocityReconcilingStrategy(this);
+		this.modelTools = new ModelTools(this);
+		this.reconcilingStrategy = new VelocityReconcilingStrategy(this);
 	}
 
-//	public void collapse(int anOffset, int aLength) {
-//		ProjectionSourceViewer viewer = (ProjectionSourceViewer)getSourceViewer();
-//		viewer.collapse(anOffset, aLength);
-//	}
-//	
-//	public void expand(int anOffset, int aLength) {
-//		ProjectionSourceViewer viewer = (ProjectionSourceViewer)getSourceViewer();
-//		viewer.expand(anOffset, aLength);
-//	}
-//	
-//	public void defineProjection(int anOffset, int aLength) {
-//		Position pos = new Position(anOffset, aLength);
-//		fAnnotationModel.addAnnotation(new ProjectionAnnotation(pos),
-//												 pos);
-//	}
-//	
-//	public void removeAllProjections() {
-//		fAnnotationModel.removeAllAnnotations();
-//	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.editors.text.TextEditor#initializeEditor()
-	 */
+	@Override
 	protected void initializeEditor() {
 		super.initializeEditor();
 
@@ -82,98 +60,61 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 
 		setDocumentProvider(new VelocityDocumentProvider());
 		setSourceViewerConfiguration(new VelocityConfiguration(this));
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.editors.text.TextEditor#initializeKeyBindingScopes()
-	 */
+	@Override
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(new String[] {
-							 "org.vaulttec.velocity.ui.velocityEditorScope" });
+		setKeyBindingScopes(new String[] { "org.vaulttec.velocity.ui.velocityEditorScope" });
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#createSourceViewer(org.eclipse.swt.widgets.Composite, org.eclipse.jface.text.source.IVerticalRuler, int)
-	 */
-//	protected ISourceViewer createSourceViewer(Composite parent,
-//											IVerticalRuler ruler, int styles) {
-//		ProjectionSourceViewer viewer = new ProjectionSourceViewer(parent,
-//																ruler, styles);
-//		if (fAnnotationModel != null) {
-//			viewer.setProjectionAnnotationModel(fAnnotationModel);
-//			StyledText text= viewer.getTextWidget();
-//			text.addPaintListener(new ProjectionPainter(viewer));
-//		}
-//		return viewer;
-//	}
-
-	/* (non-Javadoc)
-	 * @see AbstractTextEditor#createVerticalRuler()
-	 */
-//	protected IVerticalRuler createVerticalRuler() {
-//		CompositeRuler ruler = new CompositeRuler(1);
-//		ruler.addDecorator(0, new AnnotationRulerColumn(VERTICAL_RULER_WIDTH));
-//		fAnnotationModel = new AnnotationModel();
-//		IVerticalRulerColumn column = new OutlinerRulerColumn(
-//						 fAnnotationModel, VERTICAL_RULER_WIDTH - 1);
-//		ruler.addDecorator(1, column);
-//		return ruler;
-//	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
-	 */
+	@Override
 	protected void createActions() {
 		super.createActions();
 
 		// Add goto definition action
-		IAction action = new GotoDefinitionAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "GotoDefinition.", this);
-		action.setActionDefinitionId(
-								  IVelocityActionDefinitionIds.GOTO_DEFINITION);
+		IAction action = new GotoDefinitionAction(VelocityPlugin.getDefault().getResourceBundle(),
+				PREFIX + "GotoDefinition.", this);
+		action.setActionDefinitionId(IVelocityActionDefinitionIds.GOTO_DEFINITION);
 		setAction(IVelocityActionConstants.GOTO_DEFINITION, action);
 
 		// Add content assist propsal action
-		action = new ContentAssistAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "ContentAssist.", this);
-		action.setActionDefinitionId(
-					   ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		action = new ContentAssistAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "ContentAssist.",
+				this);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(IVelocityActionConstants.CONTENT_ASSIST, action);
 
 		// Add comment action
-		action = new TextOperationAction(
-					  VelocityPlugin.getDefault().getResourceBundle(),
-					  PREFIX + "Comment.", this, ITextOperationTarget.PREFIX);
-		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);		
+		action = new TextOperationAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.", this,
+				ITextOperationTarget.PREFIX);
+		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
 		setAction(IVelocityActionConstants.COMMENT, action);
 
 		// Add uncomment action
-		action = new TextOperationAction(
-			  VelocityPlugin.getDefault().getResourceBundle(),
-			  PREFIX + "Uncomment.", this, ITextOperationTarget.STRIP_PREFIX);
-		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);		
+		action = new TextOperationAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Uncomment.", this,
+				ITextOperationTarget.STRIP_PREFIX);
+		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);
 		setAction(IVelocityActionConstants.UNCOMMENT, action);
 	}
-	
+
 	/**
 	 * Get the outline page if requested.
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable.getAdapter(Class)
-	 */ 
-	public Object getAdapter(Class aClass) {
-	    Object adapter;
-		if (aClass.equals(IContentOutlinePage.class)) {
-			if (fOutlinePage == null || fOutlinePage.isDisposed()) {
-			    fOutlinePage = new VelocityOutlinePage(this);
+	 */
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class clazz) {
+		Object adapter;
+		if (clazz.equals(IContentOutlinePage.class)) {
+			if (outlinePage == null || outlinePage.isDisposed()) {
+				outlinePage = new VelocityOutlinePage(this);
 				if (getEditorInput() != null) {
-					fOutlinePage.setInput(getEditorInput());
+					outlinePage.setInput(getEditorInput());
 				}
 			}
-			adapter = fOutlinePage;
+			adapter = outlinePage;
 		} else {
-		    adapter = super.getAdapter(aClass);
+			adapter = super.getAdapter(clazz);
 		}
 		return adapter;
 	}
@@ -183,39 +124,34 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 	 *
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
-		if (fOutlinePage != null && !fOutlinePage.isDisposed()) {
-			fOutlinePage.dispose();
-			fOutlinePage = null;
+		if (outlinePage != null && !outlinePage.isDisposed()) {
+			outlinePage.dispose();
+			outlinePage = null;
 		}
 		VelocityEditorEnvironment.disconnect();
 		super.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#editorContextMenuAboutToShow(org.eclipse.jface.action.IMenuManager)
-	 */
-	protected void editorContextMenuAboutToShow(IMenuManager aMenu) {
-		super.editorContextMenuAboutToShow(aMenu);
-		addAction(aMenu, ITextEditorActionConstants.MB_ADDITIONS,
-				  IVelocityActionConstants.GOTO_DEFINITION);
-		addAction(aMenu, ITextEditorActionConstants.MB_ADDITIONS,
-				  IVelocityActionConstants.COMMENT);
-		addAction(aMenu, ITextEditorActionConstants.MB_ADDITIONS,
-				  IVelocityActionConstants.UNCOMMENT);
+	@Override
+	protected void editorContextMenuAboutToShow(IMenuManager menu) {
+		super.editorContextMenuAboutToShow(menu);
+		addAction(menu, ITextEditorActionConstants.MB_ADDITIONS, IVelocityActionConstants.GOTO_DEFINITION);
+		addAction(menu, ITextEditorActionConstants.MB_ADDITIONS, IVelocityActionConstants.COMMENT);
+		addAction(menu, ITextEditorActionConstants.MB_ADDITIONS, IVelocityActionConstants.UNCOMMENT);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
-	 */
+	@Override
 	protected void handleCursorPositionChanged() {
 		super.handleCursorPositionChanged();
 		int line = getCursorLine();
-		if (line > 0 && line != fLastCursorLine) {
-			fLastCursorLine = line;
-			if (fOutlinePage != null && !fOutlinePage.isDisposed()) {
-//System.out.println("handleCursorPositionChanged: line=" + line);
-				fOutlinePage.selectNode(line, false);
+		if (line > 0 && line != lastCursorLine) {
+			lastCursorLine = line;
+			if (outlinePage != null && !outlinePage.isDisposed()) {
+				// System.out.println("handleCursorPositionChanged: line=" +
+				// line);
+				outlinePage.selectNode(line, false);
 			}
 		}
 	}
@@ -228,10 +164,10 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 		return null;
 	}
 
-	public int getLine(int anOffset) {
+	public int getLine(int offset) {
 		int line;
 		try {
-			line = getDocument().getLineOfOffset(anOffset) + 1;
+			line = getDocument().getLineOfOffset(offset) + 1;
 		} catch (BadLocationException e) {
 			line = -1;
 		}
@@ -244,8 +180,7 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer != null) {
 			StyledText styledText = sourceViewer.getTextWidget();
-			int caret = widgetOffset2ModelOffset(sourceViewer,
-												 styledText.getCaretOffset());
+			int caret = widgetOffset2ModelOffset(sourceViewer, styledText.getCaretOffset());
 			IDocument document = sourceViewer.getDocument();
 			if (document != null) {
 				try {
@@ -258,27 +193,27 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 		return line;
 	}
 
-	public void highlightNode(ITreeNode aNode, boolean aMoveCursor) {
-	    IDocument doc = getDocument();
+	public void highlightNode(ITreeNode node, boolean moveCursor) {
+		IDocument doc = getDocument();
 		try {
-			int offset = doc.getLineOffset(aNode.getStartLine() - 1);
-			IRegion endLine = doc.getLineInformation(aNode.getEndLine() - 1);
+			int offset = doc.getLineOffset(node.getStartLine() - 1);
+			IRegion endLine = doc.getLineInformation(node.getEndLine() - 1);
 			int length = endLine.getOffset() + endLine.getLength() - offset;
-			setHighlightRange(offset, length + 1, aMoveCursor);
+			setHighlightRange(offset, length + 1, moveCursor);
 		} catch (BadLocationException e) {
 			resetHighlightRange();
 		}
 	}
 
-	public void revealNode(ITreeNode aNode) {
+	public void revealNode(ITreeNode node) {
 		ISourceViewer viewer = getSourceViewer();
 		if (viewer != null) {
-		    IDocument doc = getDocument();
+			IDocument doc = getDocument();
 			try {
-				int offset = doc.getLineOffset(aNode.getStartLine() - 1);
-				IRegion endLine = doc.getLineInformation(aNode.getEndLine() - 1);
+				int offset = doc.getLineOffset(node.getStartLine() - 1);
+				IRegion endLine = doc.getLineInformation(node.getEndLine() - 1);
 				int length = endLine.getOffset() + endLine.getLength() - offset;
-				
+
 				// Reveal segment's text area in document
 				StyledText widget = getSourceViewer().getTextWidget();
 				widget.setRedraw(false);
@@ -290,21 +225,18 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 		}
 	}
 
-	public ITreeNode getNodeByLine(int aLine) {
-		return fModelTools.getNodeByLine(aLine);
+	public ITreeNode getNodeByLine(int line) {
+		return modelTools.getNodeByLine(line);
 	}
 
-	public String getDefinitionLine(IRegion aRegion) {
-		if (aRegion != null) {
-    		VelocityTextGuesser guess = new VelocityTextGuesser(getDocument(),
-    											   aRegion.getOffset(), true);
+	public String getDefinitionLine(IRegion region) {
+		if (region != null) {
+			VelocityTextGuesser guess = new VelocityTextGuesser(getDocument(), region.getOffset(), true);
 			// Check if guessed text references an externally defined macro
-    		if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
-    			VelocityMacro macro = VelocityEditorEnvironment.getParser().
-    										  getLibraryMacro(guess.getText());
-    			if (macro != null) {
-					String template = ((IFileEditorInput)getEditorInput()).
-														   getFile().getName();
+			if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
+				VelocityMacro macro = VelocityEditorEnvironment.getParser().getLibraryMacro(guess.getText());
+				if (macro != null) {
+					String template = ((IFileEditorInput) getEditorInput()).getFile().getName();
 					if (!macro.getTemplate().equals(template)) {
 						StringBuffer buf = new StringBuffer();
 						buf.append("#macro (");
@@ -313,47 +245,43 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 						buf.append(macro.getTemplate());
 						return buf.toString();
 					}
-    			}
-    		}
+				}
+			}
 
 			// Look through model tree for guessed text
-			ITreeNode node = fModelTools.getNodeByGuess(guess);
+			ITreeNode node = modelTools.getNodeByGuess(guess);
 			if (node != null) {
 				IDocument doc = getDocument();
 				try {
-					aRegion = doc.getLineInformation(node.getStartLine() - 1);
+					region = doc.getLineInformation(node.getStartLine() - 1);
 					StringBuffer buf = new StringBuffer();
 					buf.append(node.getStartLine());
 					buf.append(": ");
-					buf.append(doc.get(aRegion.getOffset(),
-									   aRegion.getLength()).trim()); 
+					buf.append(doc.get(region.getOffset(), region.getLength()).trim());
 					return buf.toString();
-				} catch(BadLocationException e) {
+				} catch (BadLocationException e) {
 				}
 			}
 		}
 		return null;
 	}
 
-	public void gotoDefinition(IRegion aRegion) {
-		if (aRegion != null) {
-    		VelocityTextGuesser guess = new VelocityTextGuesser(getDocument(),
-    											   aRegion.getOffset(), true);
+	public void gotoDefinition(IRegion region) {
+		if (region != null) {
+			VelocityTextGuesser guess = new VelocityTextGuesser(getDocument(), region.getOffset(), true);
 			// Check if guessed text references an externally defined macro
-    		if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
-    			VelocityMacro macro = VelocityEditorEnvironment.getParser().
-    										  getLibraryMacro(guess.getText());
-    			if (macro != null) {
-					String template = ((IFileEditorInput)getEditorInput()).
-														   getFile().getName();
+			if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
+				VelocityMacro macro = VelocityEditorEnvironment.getParser().getLibraryMacro(guess.getText());
+				if (macro != null) {
+					String template = ((IFileEditorInput) getEditorInput()).getFile().getName();
 					if (!macro.getTemplate().equals(template)) {
 						return;
 					}
-    			}
-    		}
+				}
+			}
 
 			// Look through model tree for guessed text
-			ITreeNode node = fModelTools.getNodeByGuess(guess);
+			ITreeNode node = modelTools.getNodeByGuess(guess);
 			if (node != null) {
 				markInNavigationHistory();
 				highlightNode(node, true);
@@ -365,110 +293,108 @@ public class VelocityEditor extends /*Projection*/TextEditor {
 	/**
 	 * Returns true if specified line belongs to a <code>#foreach</code> block.
 	 */
-	public boolean isLineWithinLoop(int aLine) {
-		return fModelTools.isLineWithinLoop(aLine);
+	public boolean isLineWithinLoop(int line) {
+		return modelTools.isLineWithinLoop(line);
 	}
 
-	public List getVariables(int aLine) {
-		return fModelTools.getVariables(aLine);
+	public List<String> getVariables(int line) {
+		return modelTools.getVariables(line);
 	}
 
-	public List getMacros() {
-		return fModelTools.getMacros();
+	public List<String> getMacros() {
+		return modelTools.getMacros();
 	}
 
 	public VelocityReconcilingStrategy getReconcilingStrategy() {
-		return fReconcilingStrategy;
+		return reconcilingStrategy;
 	}
 
 	public Object[] getRootElements() {
-		return fReconcilingStrategy.getRootElements();
+		return reconcilingStrategy.getRootElements();
 	}
 
 	public ITreeNode getRootNode() {
-		return fReconcilingStrategy.getRootNode();
+		return reconcilingStrategy.getRootNode();
 	}
 
 	public ITreeNode getLastRootNode() {
-		return fReconcilingStrategy.getLastRootNode();
+		return reconcilingStrategy.getLastRootNode();
 	}
 
 	public void updateOutlinePage() {
-		if (fOutlinePage != null) {
-			fOutlinePage.update();
+		if (outlinePage != null) {
+			outlinePage.update();
 		}
 	}
 
-	public void moveCursor(int aLine) {
+	public void moveCursor(int line) {
 		ISourceViewer sourceViewer = getSourceViewer();
 		try {
-			int offset = getDocument().getLineOffset(aLine - 1);
+			int offset = getDocument().getLineOffset(line - 1);
 			sourceViewer.setSelectedRange(offset, 0);
 			sourceViewer.revealRange(offset, 0);
 		} catch (BadLocationException e) {
 		}
 	}
-	
+
 	/**
-     * Determines if the specified character may be part of a Velocity
-     * reference. A character may be part of a Velocity directive if and only if
-     * it is one of the following:
-     * <ul>
-     * <li>a letter (a..z, A..Z)
-     * <li>a digit (0..9)
-     * <li>a hyphen ("-")
-     * <li>a connecting punctuation character ("_")
-     * </ul>
-     * 
-     * @param aChar  the character to be tested.
-     * @return true if the character may be part of a Velocity reference;
-     * 				 false otherwise.
-     * @see java.lang.Character#isLetterOrDigit(char)
+	 * Determines if the specified character may be part of a Velocity
+	 * reference. A character may be part of a Velocity directive if and only if
+	 * it is one of the following:
+	 * <ul>
+	 * <li>a letter (a..z, A..Z)
+	 * <li>a digit (0..9)
+	 * <li>a hyphen ("-")
+	 * <li>a connecting punctuation character ("_")
+	 * </ul>
+	 * 
+	 * @param ch
+	 *            the character to be tested.
+	 * @return true if the character may be part of a Velocity reference; false
+	 *         otherwise.
+	 * @see java.lang.Character#isLetterOrDigit(char)
 	 */
-	public static boolean isReferencePart(char aChar) {
-		return Character.isLetterOrDigit(aChar) || aChar == '-' ||
-													aChar == '_';
+	public static boolean isReferencePart(char ch) {
+		return Character.isLetterOrDigit(ch) || ch == '-' || ch == '_';
 	}
-	
+
 	/**
 	 * Returns the desktop's StatusLineManager.
 	 */
+	@Override
 	protected IStatusLineManager getStatusLineManager() {
 		IStatusLineManager manager;
-		IEditorActionBarContributor contributor =
-									 getEditorSite().getActionBarContributor();
-		if (contributor != null &&
-						  contributor instanceof EditorActionBarContributor) {
-			manager = ((EditorActionBarContributor)contributor).
-										getActionBars().getStatusLineManager();
+		IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
+		if (contributor != null && contributor instanceof EditorActionBarContributor) {
+			manager = ((EditorActionBarContributor) contributor).getActionBars().getStatusLineManager();
 		} else {
 			manager = null;
 		}
 		return manager;
-	}	
+	}
 
 	/**
 	 * Displays an error message in editor's status line.
 	 */
-	public void displayErrorMessage(String aMessage) {
+	public void displayErrorMessage(String message) {
 		IStatusLineManager manager = getStatusLineManager();
 		if (manager != null) {
-			manager.setErrorMessage(aMessage);
+			manager.setErrorMessage(message);
 		}
-	}	
+	}
 
-	public void addProblemMarker(String aMessage, int aLine) {
-		IFile file = ((IFileEditorInput)getEditorInput()).getFile(); 
+	public void addProblemMarker(String message, int line) {
+		IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 		try {
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-			marker.setAttribute(IMarker.MESSAGE, aMessage);
-			marker.setAttribute(IMarker.LINE_NUMBER, aLine);
-			Position pos = new Position(getDocument().getLineOffset(aLine - 1));
-			getSourceViewer().getAnnotationModel().addAnnotation(
-											new MarkerAnnotation(marker), pos);
+			marker.setAttribute(IMarker.MESSAGE, message);
+			marker.setAttribute(IMarker.LINE_NUMBER, line);
+			Position pos = new Position(getDocument().getLineOffset(line - 1));
+			getSourceViewer().getAnnotationModel().addAnnotation(new MarkerAnnotation(marker), pos);
 		} catch (Exception e) {
 			VelocityPlugin.log(e);
 		}
 	}
+
 }

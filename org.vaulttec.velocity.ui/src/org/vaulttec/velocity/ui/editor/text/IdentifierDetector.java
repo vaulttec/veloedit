@@ -36,7 +36,6 @@ public class IdentifierDetector implements IWordDetector {
      * <li>a digit (0..9)
      * <li>a hyphen ("-")
      * <li>a underscore("_")
-     * <li>a punctuation character (".")
      * </ul>
      * 
      * @param aChar  the character to be tested.
@@ -46,7 +45,6 @@ public class IdentifierDetector implements IWordDetector {
 	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart
 	 */
 	public boolean isWordPart(char aChar) {
-		return (Character.isLetterOrDigit(aChar) || aChar == '-' ||
-												 aChar == '_' || aChar == '.');
+		return (Character.isLetterOrDigit(aChar) || aChar == '-' || aChar == '_');
 	}
 }

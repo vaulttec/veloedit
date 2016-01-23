@@ -15,7 +15,7 @@ contains an editor for the Velocity template language.
    </description>
 
    <copyright>
-      Copyright 2015, VaultTec.org
+      Copyright 2016, VaultTec.org
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -40,6 +40,12 @@ at http://www.eclipse.org/legal/epl-v10.html.
          id="org.vaulttec.velocity.ui"
          download-size="55"
          install-size="65"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.vaulttec.velocity.core"
+         download-size="0"
+         install-size="0"
          version="0.0.0"/>
 
 </feature>

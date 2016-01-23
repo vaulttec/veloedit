@@ -13,10 +13,10 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.vaulttec.velocity.core.model.Directive;
+import org.vaulttec.velocity.core.parser.VelocityMacro;
 import org.vaulttec.velocity.ui.VelocityPluginImages;
-import org.vaulttec.velocity.ui.editor.parser.VelocityMacro;
 import org.vaulttec.velocity.ui.editor.text.VelocityTextGuesser;
-import org.vaulttec.velocity.ui.model.Directive;
 
 public class VelocityCompletionProcessor implements IContentAssistProcessor {
 

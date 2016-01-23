@@ -16,8 +16,8 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.vaulttec.velocity.ui.IColorConstants;
 import org.vaulttec.velocity.ui.VelocityColorProvider;
+import org.vaulttec.velocity.ui.editor.text.IVelocityPartitions;
 import org.vaulttec.velocity.ui.editor.text.NonRuleBasedDamagerRepairer;
-import org.vaulttec.velocity.ui.editor.text.VelocityPartitionScanner;
 
 public class VelocityConfiguration extends TextSourceViewerConfiguration {
 
@@ -27,21 +27,27 @@ public class VelocityConfiguration extends TextSourceViewerConfiguration {
 		fEditor = anEditor;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredContentTypes(org.eclipse.jface.text.source.ISourceViewer)
-	 */
+	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer aSourceViewer) {
-		return VelocityPartitionScanner.TYPES;
+		int length = IVelocityPartitions.PARTITIONS.length;
+		String[] contentTypes = new String[length + 1];
+		contentTypes[0] = IDocument.DEFAULT_CONTENT_TYPE;
+		for (int i = 0; i < length; i++) {
+			contentTypes[i + 1] = IVelocityPartitions.PARTITIONS[i];
+		}
+		return contentTypes;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
-	 */
-	public ITextHover getTextHover(ISourceViewer aSourceViewer,
-									String aContentType) {
+
+	@Override
+	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
+		return IVelocityPartitions.VELOCITY_PARTITIONING;
+	}
+
+	@Override
+	public ITextHover getTextHover(ISourceViewer aSourceViewer, String aContentType) {
 		ITextHover hover;
-		if (aContentType.equals(IDocument.DEFAULT_CONTENT_TYPE) ||
-				 aContentType.equals(VelocityPartitionScanner.PARSED_STRING)) {
+		if (aContentType.equals(IDocument.DEFAULT_CONTENT_TYPE)
+				|| aContentType.equals(IVelocityPartitions.PARSED_STRING)) {
 			hover = new VelocityTextHover(fEditor);
 		} else {
 			hover = null;
@@ -55,18 +61,14 @@ public class VelocityConfiguration extends TextSourceViewerConfiguration {
 	public IAnnotationHover getAnnotationHover(ISourceViewer aSourceViewer) {
 		return new VelocityAnnotationHover();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getContentAssistant(org.eclipse.jface.text.source.ISourceViewer)
-	 */
+
+	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer aSourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(
-							  new VelocityCompletionProcessor(fEditor, true),
-							  IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setContentAssistProcessor(
-							   new VelocityCompletionProcessor(fEditor, false),
-							   VelocityPartitionScanner.PARSED_STRING);
+		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(fEditor, true),
+				IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(fEditor, false),
+				IVelocityPartitions.PARSED_STRING);
 		assistant.enableAutoInsert(true);
 		assistant.enableAutoActivation(true);
 		return assistant;
@@ -88,43 +90,35 @@ public class VelocityConfiguration extends TextSourceViewerConfiguration {
 		return new String[] { "##", "" };
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getPresentationReconciler(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	public IPresentationReconciler getPresentationReconciler(
-												 ISourceViewer aSourceViewer) {
+	@Override
+	public IPresentationReconciler getPresentationReconciler(ISourceViewer aSourceViewer) {
 		VelocityColorProvider cp = VelocityEditorEnvironment.getColorProvider();
 		PresentationReconciler rec = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(
-								   VelocityEditorEnvironment.getCodeScanner());
+		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(VelocityEditorEnvironment.getCodeScanner());
 		rec.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		rec.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(
-					  new TextAttribute(cp.getColor(IColorConstants.COMMENT)));
-		rec.setDamager(ndr, VelocityPartitionScanner.SINGLE_LINE_COMMENT);
-		rec.setRepairer(ndr, VelocityPartitionScanner.SINGLE_LINE_COMMENT);
+				new TextAttribute(cp.getColor(IColorConstants.COMMENT)));
+		rec.setDamager(ndr, IVelocityPartitions.SINGLE_LINE_COMMENT);
+		rec.setRepairer(ndr, IVelocityPartitions.SINGLE_LINE_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
-										cp.getColor(IColorConstants.COMMENT)));
-		rec.setDamager(ndr, VelocityPartitionScanner.MULTI_LINE_COMMENT);
-		rec.setRepairer(ndr, VelocityPartitionScanner.MULTI_LINE_COMMENT);
+		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.COMMENT)));
+		rec.setDamager(ndr, IVelocityPartitions.MULTI_LINE_COMMENT);
+		rec.setRepairer(ndr, IVelocityPartitions.MULTI_LINE_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
-									cp.getColor(IColorConstants.DOC_COMMENT)));
-		rec.setDamager(ndr, VelocityPartitionScanner.DOC_COMMENT);
-		rec.setRepairer(ndr, VelocityPartitionScanner.DOC_COMMENT);
+		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.DOC_COMMENT)));
+		rec.setDamager(ndr, IVelocityPartitions.DOC_COMMENT);
+		rec.setRepairer(ndr, IVelocityPartitions.DOC_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
-										 cp.getColor(IColorConstants.STRING)));
-		rec.setDamager(ndr, VelocityPartitionScanner.UNPARSED_STRING);
-		rec.setRepairer(ndr, VelocityPartitionScanner.UNPARSED_STRING);
+		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.STRING)));
+		rec.setDamager(ndr, IVelocityPartitions.UNPARSED_STRING);
+		rec.setRepairer(ndr, IVelocityPartitions.UNPARSED_STRING);
 
-		dr = new DefaultDamagerRepairer(
-								 VelocityEditorEnvironment.getStringScanner());
-		rec.setDamager(dr, VelocityPartitionScanner.PARSED_STRING);
-		rec.setRepairer(dr, VelocityPartitionScanner.PARSED_STRING);
+		dr = new DefaultDamagerRepairer(VelocityEditorEnvironment.getStringScanner());
+		rec.setDamager(dr, IVelocityPartitions.PARSED_STRING);
+		rec.setRepairer(dr, IVelocityPartitions.PARSED_STRING);
 		return rec;
 	}
 
