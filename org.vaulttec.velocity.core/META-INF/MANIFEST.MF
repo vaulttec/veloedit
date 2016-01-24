@@ -5,7 +5,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.vaulttec.velocity.core;singleton:=true
 Bundle-Vendor: %providerName
 Bundle-ClassPath: velocitycore.jar,
- velocity-1.7-dep.jar
+ velocity-1.7-dep-without-parser.jar
 Bundle-Localization: plugin
 Export-Package: org.apache.velocity,
  org.apache.velocity.runtime,
