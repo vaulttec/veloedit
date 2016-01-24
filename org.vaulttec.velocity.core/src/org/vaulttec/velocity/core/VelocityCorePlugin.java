@@ -45,7 +45,7 @@ public class VelocityCorePlugin extends Plugin implements BundleActivator, IPref
 		}
 		parser = new VelocityParser();
 		try {
-			parser.init();
+			parser.initialize();
 		} catch (Exception e) {
 			log(e);
 		}
@@ -93,7 +93,7 @@ public class VelocityCorePlugin extends Plugin implements BundleActivator, IPref
 		if (IPreferencesConstants.LIBRARY_PATH.equals(key)
 				|| IPreferencesConstants.LIBRARY_LIST.equals(key)
 				|| IPreferencesConstants.VELOCITY_USER_DIRECTIVES.equals(key)) {
-			getParser().init();
+			getParser().initialize();
 		}
 	}
 

@@ -36,8 +36,7 @@ public class VelocityParser extends RuntimeInstance {
 		return macros.values();
 	}
 
-	@Override
-	public synchronized void init() {
+	public synchronized void initialize() {
 
 		// Set Velocity library
 		IEclipsePreferences preferences = VelocityCorePlugin.getPreferences();
