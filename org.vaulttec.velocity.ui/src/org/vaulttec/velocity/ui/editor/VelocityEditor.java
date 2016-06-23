@@ -59,7 +59,7 @@ public class VelocityEditor extends TextEditor {
 		VelocityEditorEnvironment.connect();
 
 		setDocumentProvider(new VelocityDocumentProvider());
-		setSourceViewerConfiguration(new VelocityConfiguration(this));
+		setSourceViewerConfiguration(new VelocitySourceViewerConfiguration(this));
 
 	}
 

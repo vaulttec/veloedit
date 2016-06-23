@@ -19,16 +19,16 @@ import org.vaulttec.velocity.ui.VelocityColorProvider;
 import org.vaulttec.velocity.ui.editor.text.IVelocityPartitions;
 import org.vaulttec.velocity.ui.editor.text.NonRuleBasedDamagerRepairer;
 
-public class VelocityConfiguration extends TextSourceViewerConfiguration {
+public class VelocitySourceViewerConfiguration extends TextSourceViewerConfiguration {
 
-	private VelocityEditor fEditor;
+	private final VelocityEditor editor;
 
-	public VelocityConfiguration(VelocityEditor anEditor) {
-		fEditor = anEditor;
+	public VelocitySourceViewerConfiguration(VelocityEditor editor) {
+		this.editor = editor;
 	}
 
 	@Override
-	public String[] getConfiguredContentTypes(ISourceViewer aSourceViewer) {
+	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		int length = IVelocityPartitions.PARTITIONS.length;
 		String[] contentTypes = new String[length + 1];
 		contentTypes[0] = IDocument.DEFAULT_CONTENT_TYPE;
@@ -44,54 +44,46 @@ public class VelocityConfiguration extends TextSourceViewerConfiguration {
 	}
 
 	@Override
-	public ITextHover getTextHover(ISourceViewer aSourceViewer, String aContentType) {
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
 		ITextHover hover;
-		if (aContentType.equals(IDocument.DEFAULT_CONTENT_TYPE)
-				|| aContentType.equals(IVelocityPartitions.PARSED_STRING)) {
-			hover = new VelocityTextHover(fEditor);
+		if (contentType.equals(IDocument.DEFAULT_CONTENT_TYPE)
+				|| contentType.equals(IVelocityPartitions.PARSED_STRING)) {
+			hover = new VelocityTextHover(editor);
 		} else {
 			hover = null;
 		}
 		return hover;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAnnotationHover(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	public IAnnotationHover getAnnotationHover(ISourceViewer aSourceViewer) {
+	@Override
+	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
 		return new VelocityAnnotationHover();
 	}
 
 	@Override
-	public IContentAssistant getContentAssistant(ISourceViewer aSourceViewer) {
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(fEditor, true),
+		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(editor, true),
 				IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(fEditor, false),
+		assistant.setContentAssistProcessor(new VelocityCompletionProcessor(editor, false),
 				IVelocityPartitions.PARSED_STRING);
 		assistant.enableAutoInsert(true);
 		assistant.enableAutoActivation(true);
 		return assistant;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getDoubleClickStrategy(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
-	 */
-	public ITextDoubleClickStrategy getDoubleClickStrategy(
-							ISourceViewer aSourceViewer, String aContentType) {
+	@Override
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 		return VelocityEditorEnvironment.getDoubleClickStrategy();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getDefaultPrefixes(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
-	 */
-	public String[] getDefaultPrefixes(ISourceViewer aSourceViewer,
-										String aContentType) {
+	@Override
+	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
 		return new String[] { "##", "" };
 	}
 
 	@Override
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer aSourceViewer) {
+	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		VelocityColorProvider cp = VelocityEditorEnvironment.getColorProvider();
 		PresentationReconciler rec = new PresentationReconciler();
 
@@ -122,10 +114,9 @@ public class VelocityConfiguration extends TextSourceViewerConfiguration {
 		return rec;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getReconciler(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	public IReconciler getReconciler(ISourceViewer aSourceViewer) {
-		return new MonoReconciler(fEditor.getReconcilingStrategy(), false);
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		return new MonoReconciler(editor.getReconcilingStrategy(), false);
 	}
+
 }
