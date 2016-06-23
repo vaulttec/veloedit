@@ -6,26 +6,21 @@ import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 
 public class VelocityDoubleClickStrategy implements ITextDoubleClickStrategy {
-	protected ITextViewer fText;
+	protected ITextViewer viewer;
 
-	/**
-	 * @see org.eclipse.jface.text.ITextDoubleClickStrategy#doubleClicked(org.eclipse.jface.text.ITextViewer)
-	 */
-	public void doubleClicked(ITextViewer part) {
-		int pos = part.getSelectedRange().x;
-
-		if (pos < 0)
-			return;
-
-		fText = part;
-
-		if (!selectComment(pos)) {
-			selectWord(pos);
+	@Override
+	public void doubleClicked(ITextViewer viewer) {
+		int pos = viewer.getSelectedRange().x;
+		if (pos >= 0) {
+			this.viewer = viewer;
+			if (!selectComment(pos)) {
+				selectWord(pos);
+			}
 		}
 	}
 
 	protected boolean selectComment(int caretPos) {
-		IDocument doc = fText.getDocument();
+		IDocument doc = viewer.getDocument();
 		int startPos, endPos;
 
 		try {
@@ -65,7 +60,7 @@ public class VelocityDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			int offset = startPos + 1;
 			int len = endPos - offset;
-			fText.setSelectedRange(offset, len);
+			viewer.setSelectedRange(offset, len);
 			return true;
 		} catch (BadLocationException x) {
 		}
@@ -75,7 +70,7 @@ public class VelocityDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 	protected boolean selectWord(int caretPos) {
 
-		IDocument doc = fText.getDocument();
+		IDocument doc = viewer.getDocument();
 		int startPos, endPos;
 
 		try {
@@ -115,28 +110,28 @@ public class VelocityDoubleClickStrategy implements ITextDoubleClickStrategy {
 	private void selectRange(int startPos, int stopPos) {
 		int offset = startPos + 1;
 		int length = stopPos - offset;
-		fText.setSelectedRange(offset, length);
+		viewer.setSelectedRange(offset, length);
 	}
 
 	/**
-     * Determines if the specified character may be part of a Velocity
-     * identifier as other than the first character.
-     * A character may be part of a Velocity identifier if and only if
-     * it is one of the following:
-     * <ul>
-     * <li>a letter (a..z, A..Z)
-     * <li>a digit (0..9)
-     * <li>a hyphen ("-")
-     * <li>a underscore("_")
-     * </ul>
-     * 
-     * @param aChar  the character to be tested.
-     * @return true if the character may be part of a Velocity identifier; 
-     *          false otherwise.
-     * @see java.lang.Character#isLetterOrDigit(char)
+	 * Determines if the specified character may be part of a Velocity
+	 * identifier as other than the first character. A character may be part of
+	 * a Velocity identifier if and only if it is one of the following:
+	 * <ul>
+	 * <li>a letter (a..z, A..Z)
+	 * <li>a digit (0..9)
+	 * <li>a hyphen ("-")
+	 * <li>a underscore("_")
+	 * </ul>
+	 * 
+	 * @param c
+	 *            the character to be tested.
+	 * @return true if the character may be part of a Velocity identifier; false
+	 *         otherwise.
+	 * @see java.lang.Character#isLetterOrDigit(char)
 	 */
-	private boolean isIdentifierPart(char aChar) {
-		return (Character.isLetterOrDigit(aChar) || aChar == '-' ||
-																 aChar == '_');
+	private boolean isIdentifierPart(char c) {
+		return (Character.isLetterOrDigit(c) || c == '-' || c == '_');
 	}
+
 }

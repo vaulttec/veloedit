@@ -20,19 +20,17 @@ import org.vaulttec.velocity.ui.editor.VelocityEditorEnvironment;
 
 public class VelocityCodeScanner extends RuleBasedScanner {
 
-	public VelocityCodeScanner(VelocityColorProvider aProvider) {
-		List rules = new ArrayList();		
+	public VelocityCodeScanner(VelocityColorProvider provider) {
+		List<IRule> rules = new ArrayList<IRule>();
 
 		// Add generic whitespace rule
 		rules.add(new WhitespaceRule(new WhitespaceDetector()));
 
 		// Add word rule for directives
-		Token token = new Token(new TextAttribute(aProvider.getColor(
-										  IColorConstants.DIRECTIVE)));
+		Token token = new Token(new TextAttribute(provider.getColor(IColorConstants.DIRECTIVE)));
 		WordRule wordRule = new WordRule(new DirectiveDetector(), token);
-		token = new Token(new TextAttribute(aProvider.getColor(
-											 IColorConstants.DIRECTIVE),
-											 null, SWT.BOLD));
+		token = new Token(new TextAttribute(provider.getColor(IColorConstants.DIRECTIVE), null, SWT.BOLD));
+
 		// System directives
 		String[] directives = Directive.DIRECTIVES;
 		for (int i = directives.length - 1; i >= 0; i--) {
@@ -40,29 +38,24 @@ public class VelocityCodeScanner extends RuleBasedScanner {
 		}
 
 		// User directives
-		Iterator userDirectives = VelocityEditorEnvironment.getParser().
-											    getUserDirectives().iterator();
+		Iterator<String> userDirectives = VelocityEditorEnvironment.getParser().getUserDirectives().iterator();
 		while (userDirectives.hasNext()) {
-			wordRule.addWord((String)userDirectives.next(), token);
+			wordRule.addWord((String) userDirectives.next(), token);
 		}
 		rules.add(wordRule);
 
 		// Add pattern rule for formal references
-		token = new Token(new TextAttribute(aProvider.getColor(
-										  IColorConstants.REFERENCE)));
-		rules.add(new PatternRule("$!{", "}", token, (char)0, true));
-		rules.add(new PatternRule("${", "}", token, (char)0, true));
+		token = new Token(new TextAttribute(provider.getColor(IColorConstants.REFERENCE)));
+		rules.add(new PatternRule("$!{", "}", token, (char) 0, true));
+		rules.add(new PatternRule("${", "}", token, (char) 0, true));
 
 		// Add pattern rule for shorthand references
-		token = new Token(new TextAttribute(aProvider.getColor(
-										  IColorConstants.REFERENCE)));
-		rules.add(new WordPatternRule(new IdentifierDetector(), "$!", null,
-									  token));
-		rules.add(new WordPatternRule(new IdentifierDetector(), "$", null,
-									  token));
+		token = new Token(new TextAttribute(provider.getColor(IColorConstants.REFERENCE)));
+		rules.add(new WordPatternRule(new IdentifierDetector(), "$!", null, token));
+		rules.add(new WordPatternRule(new IdentifierDetector(), "$", null, token));
 
-		IRule[] result = new IRule[rules.size()];
-		rules.toArray(result);
+		IRule[] result = rules.toArray(new IRule[rules.size()]);
 		setRules(result);
 	}
+
 }

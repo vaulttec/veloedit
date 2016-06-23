@@ -20,8 +20,8 @@ public class VelocityParser extends RuntimeInstance {
 	private List<String> userDirectives;
 	private Map<String, VelocityMacro> macros = new HashMap<>();
 
-	public boolean isUserDirective(String aName) {
-		return userDirectives.contains(aName);
+	public boolean isUserDirective(String name) {
+		return userDirectives.contains(name);
 	}
 
 	public List<String> getUserDirectives() {
@@ -29,7 +29,7 @@ public class VelocityParser extends RuntimeInstance {
 	}
 
 	public VelocityMacro getLibraryMacro(String name) {
-		return (macros.containsKey(name) ? (VelocityMacro) macros.get(name) : null);
+		return macros.get(name);
 	}
 
 	public Collection<VelocityMacro> getLibraryMacros() {

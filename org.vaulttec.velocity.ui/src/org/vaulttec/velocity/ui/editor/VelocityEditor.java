@@ -102,9 +102,9 @@ public class VelocityEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable.getAdapter(Class)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class clazz) {
-		Object adapter;
+	public  <T> T getAdapter(Class<T> clazz) {
 		if (clazz.equals(IContentOutlinePage.class)) {
 			if (outlinePage == null || outlinePage.isDisposed()) {
 				outlinePage = new VelocityOutlinePage(this);
@@ -112,11 +112,9 @@ public class VelocityEditor extends TextEditor {
 					outlinePage.setInput(getEditorInput());
 				}
 			}
-			adapter = outlinePage;
-		} else {
-			adapter = super.getAdapter(clazz);
+			return (T) outlinePage;
 		}
-		return adapter;
+		return super.getAdapter(clazz);
 	}
 
 	/**
@@ -149,8 +147,6 @@ public class VelocityEditor extends TextEditor {
 		if (line > 0 && line != lastCursorLine) {
 			lastCursorLine = line;
 			if (outlinePage != null && !outlinePage.isDisposed()) {
-				// System.out.println("handleCursorPositionChanged: line=" +
-				// line);
 				outlinePage.selectNode(line, false);
 			}
 		}

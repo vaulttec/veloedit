@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -16,36 +17,33 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  */
 public class VelocityAnnotationHover implements IAnnotationHover {
 
-	/**
-	 * @see org.eclipse.jface.text.source.IAnnotationHover#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer, int)
-	 */
-	public String getHoverInfo(ISourceViewer aViewer, int aLine) {
+	@Override
+	public String getHoverInfo(ISourceViewer viewer, int line) {
 		String info = null;
-		IMarker marker = getMarkerForLine(aViewer, aLine);
+		IMarker marker = getMarkerForLine(viewer, line);
 		if (marker != null) {
-			String message = marker.getAttribute(IMarker.MESSAGE, (String)null);
+			String message = marker.getAttribute(IMarker.MESSAGE, (String) null);
 			if (message != null && message.trim().length() > 0) {
 				info = message.trim();
 			}
 		}
 		return info;
 	}
-	
+
 	/**
 	 * Returns one marker which includes the ruler's line of activity.
 	 */
-	protected IMarker getMarkerForLine(ISourceViewer aViewer, int aLine) {
+	protected IMarker getMarkerForLine(ISourceViewer viewer, int line) {
 		IMarker marker = null;
-		IAnnotationModel model = aViewer.getAnnotationModel();
+		IAnnotationModel model = viewer.getAnnotationModel();
 		if (model != null) {
-			Iterator e = model.getAnnotationIterator();
+			Iterator<Annotation> e = model.getAnnotationIterator();
 			while (e.hasNext()) {
-				Object o = e.next();
-				if (o instanceof MarkerAnnotation) {
-					MarkerAnnotation a = (MarkerAnnotation)o;
-					if (compareRulerLine(model.getPosition(a),
-										 aViewer.getDocument(), aLine) != 0) {
-						marker = a.getMarker();
+				Annotation a = e.next();
+				if (a instanceof MarkerAnnotation) {
+					MarkerAnnotation ma = (MarkerAnnotation) a;
+					if (compareRulerLine(model.getPosition(ma), viewer.getDocument(), line) != 0) {
+						marker = ma.getMarker();
 					}
 				}
 			}
@@ -54,21 +52,18 @@ public class VelocityAnnotationHover implements IAnnotationHover {
 	}
 
 	/**
-	 * Returns distance of given line to specified position (1 = same line,
-	 * 2 = included in given position, 0 = not related).
+	 * Returns distance of given line to specified position (1 = same line, 2 =
+	 * included in given position, 0 = not related).
 	 */
-	protected int compareRulerLine(Position aPosition, IDocument aDocument,
-									int aLine) {
+	protected int compareRulerLine(Position aPosition, IDocument document, int line) {
 		int distance = 0;
 		if (aPosition.getOffset() > -1 && aPosition.getLength() > -1) {
 			try {
-				int markerLine = aDocument.getLineOfOffset(
-														aPosition.getOffset());
-				if (aLine == markerLine) {
+				int markerLine = document.getLineOfOffset(aPosition.getOffset());
+				if (line == markerLine) {
 					distance = 1;
-				} else if (markerLine <= aLine && aLine <=
-							  aDocument.getLineOfOffset(aPosition.getOffset() +
-													  aPosition.getLength())) {
+				} else if (markerLine <= line
+						&& line <= document.getLineOfOffset(aPosition.getOffset() + aPosition.getLength())) {
 					distance = 2;
 				}
 			} catch (BadLocationException e) {
@@ -76,4 +71,5 @@ public class VelocityAnnotationHover implements IAnnotationHover {
 		}
 		return distance;
 	}
+
 }

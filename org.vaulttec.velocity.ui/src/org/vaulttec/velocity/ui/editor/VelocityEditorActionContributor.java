@@ -8,6 +8,8 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.texteditor.BasicTextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -22,14 +24,14 @@ import org.vaulttec.velocity.ui.editor.actions.TogglePresentationAction;
  * Contributes Velocity actions to the desktop's edit menu and registers the
  * according global action handlers.
  */
-public class VelocityEditorActionContributor
-									extends BasicTextEditorActionContributor {
+public class VelocityEditorActionContributor extends BasicTextEditorActionContributor {
 	private static final String PREFIX = "VelocityEditor.";
-	private TogglePresentationAction fTogglePresentation;
-	private RetargetTextEditorAction fGotoDefinition;
-	private RetargetTextEditorAction fContentAssist;
-	private RetargetTextEditorAction fComment;
-	private RetargetTextEditorAction fUncomment;
+
+	private TogglePresentationAction togglePresentation;
+	private RetargetTextEditorAction gotoDefinition;
+	private RetargetTextEditorAction contentAssist;
+	private RetargetTextEditorAction comment;
+	private RetargetTextEditorAction uncomment;
 
 	/**
 	 * Defines the menu actions and their action handlers.
@@ -41,43 +43,35 @@ public class VelocityEditorActionContributor
 	protected void createActions() {
 
 		// Define toolbar actions
-		fTogglePresentation = new TogglePresentationAction();
+		togglePresentation = new TogglePresentationAction();
 
 		// Define text editor actions
-		fGotoDefinition = new RetargetTextEditorAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "GotoDefinition.");
-		fGotoDefinition.setActionDefinitionId(
-								  IVelocityActionDefinitionIds.GOTO_DEFINITION);
-		fContentAssist = new RetargetTextEditorAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "ContentAssist.");
-		fContentAssist.setActionDefinitionId(
-					   ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		fComment = new RetargetTextEditorAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "Comment.");
-		fComment.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
-		fUncomment = new RetargetTextEditorAction(
-								VelocityPlugin.getDefault().getResourceBundle(),
-								PREFIX + "Uncomment.");
-		fUncomment.setActionDefinitionId(
-									  IJavaEditorActionDefinitionIds.UNCOMMENT);
+		gotoDefinition = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+				PREFIX + "GotoDefinition.");
+		gotoDefinition.setActionDefinitionId(IVelocityActionDefinitionIds.GOTO_DEFINITION);
+		contentAssist = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+				PREFIX + "ContentAssist.");
+		contentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		comment = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.");
+		comment.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
+		uncomment = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+				PREFIX + "Uncomment.");
+		uncomment.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);
 	}
 
-	/* (non-Javadoc)
-	 * @see IEditorActionBarContributor#setActiveEditor(IEditorPart)
-	 */
-	public void setActiveEditor(IEditorPart aPart) {
-		super.setActiveEditor(aPart);
-		doSetActiveEditor(aPart);
+	@Override
+	public void setActiveEditor(IEditorPart part) {
+		super.setActiveEditor(part);
+		doSetActiveEditor(part);
 	}
-	
+
 	/**
 	 * Sets the active editor to the actions provided by this contributor.
-	 * @param aPart the editor
+	 * 
+	 * @param part
+	 *            the editor
 	 */
-	private void doSetActiveEditor(IEditorPart aPart) {
+	private void doSetActiveEditor(IEditorPart part) {
 		IStatusLineManager manager = getActionBars().getStatusLineManager();
 		manager.setMessage(null);
 		manager.setErrorMessage(null);
@@ -85,94 +79,82 @@ public class VelocityEditorActionContributor
 		// Set the underlying action (registered by the according editor) in
 		// the action handlers
 		ITextEditor editor = null;
-		if (aPart instanceof ITextEditor) {
-			editor = (ITextEditor)aPart;
+		if (part instanceof ITextEditor) {
+			editor = (ITextEditor) part;
 		}
-		fTogglePresentation.setEditor(editor);		
-		fGotoDefinition.setAction(getAction(editor,
-									IVelocityActionConstants.GOTO_DEFINITION));
-		fContentAssist.setAction(getAction(editor,
-									 IVelocityActionConstants.CONTENT_ASSIST));
-		fComment.setAction(getAction(editor,
-									 IVelocityActionConstants.COMMENT));
-		fUncomment.setAction(getAction(editor,
-									   IVelocityActionConstants.UNCOMMENT));
+		togglePresentation.setEditor(editor);
+		gotoDefinition.setAction(getAction(editor, IVelocityActionConstants.GOTO_DEFINITION));
+		contentAssist.setAction(getAction(editor, IVelocityActionConstants.CONTENT_ASSIST));
+		comment.setAction(getAction(editor, IVelocityActionConstants.COMMENT));
+		uncomment.setAction(getAction(editor, IVelocityActionConstants.UNCOMMENT));
 		// Set global action handlers according to the given editor
 		IActionBars actionBars = getActionBars();
 		if (actionBars != null) {
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.DELETE,
-				getAction(editor, ITextEditorActionConstants.DELETE));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.UNDO,
-				getAction(editor, ITextEditorActionConstants.UNDO));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.REDO,
-				getAction(editor, ITextEditorActionConstants.REDO));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.CUT,
-				getAction(editor, ITextEditorActionConstants.CUT));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.COPY,
-				getAction(editor, ITextEditorActionConstants.COPY));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.PASTE,
-				getAction(editor, ITextEditorActionConstants.PASTE));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.SELECT_ALL,
-				getAction(editor, ITextEditorActionConstants.SELECT_ALL));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.FIND,
-				getAction(editor, ITextEditorActionConstants.FIND));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.BOOKMARK,
-				getAction(editor, ITextEditorActionConstants.BOOKMARK));
-			actionBars.setGlobalActionHandler(IWorkbenchActionConstants.ADD_TASK,
-				getAction(editor, ITextEditorActionConstants.ADD_TASK));
+			actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(),
+					getAction(editor, ITextEditorActionConstants.DELETE));
+			actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(),
+					getAction(editor, ITextEditorActionConstants.UNDO));
+			actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(),
+					getAction(editor, ITextEditorActionConstants.REDO));
+			actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(),
+					getAction(editor, ITextEditorActionConstants.CUT));
+			actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(),
+					getAction(editor, ITextEditorActionConstants.COPY));
+			actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(),
+					getAction(editor, ITextEditorActionConstants.PASTE));
+			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(),
+					getAction(editor, ITextEditorActionConstants.SELECT_ALL));
+			actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(),
+					getAction(editor, ITextEditorActionConstants.FIND));
+			actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(),
+					getAction(editor, IDEActionFactory.BOOKMARK.getId()));
+			actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(),
+					getAction(editor, IDEActionFactory.ADD_TASK.getId()));
 
 			actionBars.setGlobalActionHandler(ITextEditorActionConstants.GOTO_LINE,
-				getAction(editor, ITextEditorActionDefinitionIds.LINE_GOTO));
+					getAction(editor, ITextEditorActionDefinitionIds.LINE_GOTO));
 
 			actionBars.setGlobalActionHandler(IJavaEditorActionDefinitionIds.COMMENT,
-				getAction(editor, IVelocityActionConstants.COMMENT));
+					getAction(editor, IVelocityActionConstants.COMMENT));
 			actionBars.setGlobalActionHandler(IJavaEditorActionDefinitionIds.UNCOMMENT,
-				getAction(editor, IVelocityActionConstants.UNCOMMENT));
+					getAction(editor, IVelocityActionConstants.UNCOMMENT));
 
 			actionBars.setGlobalActionHandler(IVelocityActionConstants.GOTO_DEFINITION,
-				getAction(editor, IVelocityActionConstants.GOTO_DEFINITION));
+					getAction(editor, IVelocityActionConstants.GOTO_DEFINITION));
 
 			actionBars.updateActionBars();
 		}
 	}
-	
-	/**
-	 * @see EditorActionBarContributor#contributeToMenu(IMenuManager)
-	 */
-	public void contributeToMenu(IMenuManager aMenuManager) {
-		super.contributeToMenu(aMenuManager);
+
+	@Override
+	public void contributeToMenu(IMenuManager menuManager) {
+		super.contributeToMenu(menuManager);
 
 		// Add actions to desktop's edit menu
-		IMenuManager menu = aMenuManager.findMenuUsingPath(
-											 IWorkbenchActionConstants.M_EDIT);
+		IMenuManager menu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 		if (menu != null) {
-			menu.add(fContentAssist);
-			menu.add(fComment);
-			menu.add(fUncomment);
+			menu.add(contentAssist);
+			menu.add(comment);
+			menu.add(uncomment);
 		}
 
 		// Add actions to desktop's navigate menu
-		menu = aMenuManager.findMenuUsingPath(
-										 IWorkbenchActionConstants.M_NAVIGATE);
+		menu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if (menu != null) {
-			menu.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS,
-							   fGotoDefinition);
+			menu.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS, gotoDefinition);
 		}
 	}
 
-	/**
-	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToToolBar(org.eclipse.jface.action.IToolBarManager)
-	 */
-	public void contributeToToolBar(IToolBarManager aToolBar) {
-		aToolBar.add(new Separator());
-		aToolBar.add(fTogglePresentation);		
+	@Override
+	public void contributeToToolBar(IToolBarManager toolBarManager) {
+		toolBarManager.add(new Separator());
+		toolBarManager.add(togglePresentation);
 	}
 
-	/**
-	 * @see org.eclipse.ui.IEditorActionBarContributor#dispose()
-	 */
+	@Override
 	public void dispose() {
 		doSetActiveEditor(null);
 		super.dispose();
 	}
+
 }

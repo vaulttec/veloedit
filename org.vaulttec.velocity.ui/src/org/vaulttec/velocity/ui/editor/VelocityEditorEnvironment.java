@@ -12,29 +12,28 @@ import org.vaulttec.velocity.ui.editor.text.VelocityStringScanner;
 /**
  * This class maintains resources used by multiple instances of the editor.
  * <p>
- * To use this environment an editor has to <code>connect()</code>
- * first. Before disposing an editor a call to <code>disconnect()</code> is
- * necessary.
+ * To use this environment an editor has to <code>connect()</code> first. Before
+ * disposing an editor a call to <code>disconnect()</code> is necessary.
  */
 public class VelocityEditorEnvironment {
 
-	private static VelocityColorProvider fgColorProvider;
-	private static RuleBasedScanner fgCodeScanner;
-	private static RuleBasedScanner fgStringScanner;
-	private static ITextDoubleClickStrategy fgDoubleClickStrategy;
+	private static VelocityColorProvider colorProvider;
+	private static RuleBasedScanner codeScanner;
+	private static RuleBasedScanner stringScanner;
+	private static ITextDoubleClickStrategy doubleClickStrategy;
 
-	private static int fgRefCount = 0;
+	private static int refCount = 0;
 
 	/**
 	 * A connection has occured - initialize all resources if it is the first
 	 * activation.
 	 */
 	public static void connect() {
-		if (++fgRefCount == 1) {
-			fgColorProvider = new VelocityColorProvider();
-			fgCodeScanner = new VelocityCodeScanner(fgColorProvider);
-			fgStringScanner = new VelocityStringScanner(fgColorProvider);
-			fgDoubleClickStrategy = new VelocityDoubleClickStrategy();
+		if (++refCount == 1) {
+			colorProvider = new VelocityColorProvider();
+			codeScanner = new VelocityCodeScanner(colorProvider);
+			stringScanner = new VelocityStringScanner(colorProvider);
+			doubleClickStrategy = new VelocityDoubleClickStrategy();
 		}
 	}
 
@@ -43,12 +42,12 @@ public class VelocityEditorEnvironment {
 	 * deactivation.
 	 */
 	public static void disconnect() {
-		if (--fgRefCount == 0) {
-			fgDoubleClickStrategy = null;
-			fgStringScanner = null;
-			fgCodeScanner = null;
-			fgColorProvider.dispose();
-			fgColorProvider = null;
+		if (--refCount == 0) {
+			doubleClickStrategy = null;
+			stringScanner = null;
+			codeScanner = null;
+			colorProvider.dispose();
+			colorProvider = null;
 		}
 	}
 
@@ -56,28 +55,28 @@ public class VelocityEditorEnvironment {
 	 * Returns the singleton color provider.
 	 */
 	public static VelocityColorProvider getColorProvider() {
-		return fgColorProvider;
+		return colorProvider;
 	}
 
 	/**
 	 * Returns the singleton code scanner.
 	 */
 	public static RuleBasedScanner getCodeScanner() {
-		return fgCodeScanner;
+		return codeScanner;
 	}
 
 	/**
 	 * Returns the singleton string scanner.
 	 */
 	public static RuleBasedScanner getStringScanner() {
-		return fgStringScanner;
+		return stringScanner;
 	}
 
 	/**
 	 * Returns the singleton double-click strategy.
 	 */
 	public static ITextDoubleClickStrategy getDoubleClickStrategy() {
-		return fgDoubleClickStrategy;
+		return doubleClickStrategy;
 	}
 
 	/**
@@ -86,4 +85,5 @@ public class VelocityEditorEnvironment {
 	public static VelocityParser getParser() {
 		return VelocityCorePlugin.getParser();
 	}
+
 }
