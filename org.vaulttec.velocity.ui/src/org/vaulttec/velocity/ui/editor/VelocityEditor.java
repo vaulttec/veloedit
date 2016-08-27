@@ -54,13 +54,12 @@ public class VelocityEditor extends TextEditor {
 
 	@Override
 	protected void initializeEditor() {
-		super.initializeEditor();
-
 		VelocityEditorEnvironment.connect();
+		
+		super.initializeEditor();
 
 		setDocumentProvider(new VelocityDocumentProvider());
 		setSourceViewerConfiguration(new VelocitySourceViewerConfiguration(this));
-
 	}
 
 	@Override

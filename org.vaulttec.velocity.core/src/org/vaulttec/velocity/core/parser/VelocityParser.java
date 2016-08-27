@@ -46,6 +46,9 @@ public class VelocityParser extends RuntimeInstance {
 		// Disable Velocity logging
 		setProperty(RUNTIME_LOG_LOGSYSTEM_CLASS, NullLogChute.class.getCanonicalName());
 		setProperty(PARSER_POOL_SIZE, 0);
+		
+		// Initialize user directives
+		initializeUserDirectives();
 
 		// Call super implementation - Massage TCCL to deal with bug in m2e
 		// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=396554)
@@ -56,9 +59,6 @@ public class VelocityParser extends RuntimeInstance {
 		} finally {
 			Thread.currentThread().setContextClassLoader(oldClassLoader);
 		}
-
-		// Initialize user directives
-		initializeUserDirectives();
 	}
 
 	/**
