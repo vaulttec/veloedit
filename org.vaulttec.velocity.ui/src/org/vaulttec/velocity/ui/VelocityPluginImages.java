@@ -28,14 +28,14 @@ public class VelocityPluginImages {
 			pathSuffix = "icons/basic/";
 		}
 		try {
-			iconBaseURL = new URL(VelocityPlugin.getInstallURL(), pathSuffix);
+			iconBaseURL = new URL(VelocityUIPlugin.getInstallURL(), pathSuffix);
 		} catch (MalformedURLException e) {
-			VelocityPlugin.log(e);
+			VelocityUIPlugin.log(e);
 		}
 	}
 
 	// The plugin's image registry
-	private static final ImageRegistry IMAGE_REGISTRY = VelocityPlugin.getDefault().getImageRegistry();
+	private static final ImageRegistry IMAGE_REGISTRY = VelocityUIPlugin.getDefault().getImageRegistry();
 	// Set of predefined Image Descriptors
 	private static final String T_OBJ = "obj16";
 //	private static final String T_CLCL = "clcl16";

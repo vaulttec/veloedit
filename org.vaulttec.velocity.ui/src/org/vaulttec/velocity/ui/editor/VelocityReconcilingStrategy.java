@@ -20,7 +20,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.core.model.Template;
 import org.vaulttec.velocity.core.parser.NodeVisitor;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
  * Reconciler strategy which parses the whole editor's content (a Velocity
@@ -76,12 +76,12 @@ public class VelocityReconcilingStrategy implements IReconcilingStrategy {
 			}
 		} catch (Exception e) {
 			fError = "";
-			VelocityPlugin.log(e);
+			VelocityUIPlugin.log(e);
         } finally {
         	try {
 				reader.close();        
         	} catch (IOException e) {
-				VelocityPlugin.log(e);
+				VelocityUIPlugin.log(e);
         	}
 		}
 

@@ -4,8 +4,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.vaulttec.velocity.ui.IPreferencesConstants;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.IVelocityPreferencesConstants;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.VelocityPluginImages;
 
 /**
@@ -21,9 +21,9 @@ public class TogglePresentationAction extends TextEditorAction {
 	 * Constructs and updates the action.
 	 */
 	public TogglePresentationAction() {
-		super(VelocityPlugin.getDefault().getResourceBundle(), "VelocityEditor.TogglePresentation.", null);
+		super(VelocityUIPlugin.getDefault().getResourceBundle(), "VelocityEditor.TogglePresentation.", null);
 		VelocityPluginImages.setToolImageDescriptors(this, "segment_edit.gif");
-		setToolTipText(VelocityPlugin.getMessage("VelocityEditor.TogglePresentation.tooltip"));
+		setToolTipText(VelocityUIPlugin.getMessage("VelocityEditor.TogglePresentation.tooltip"));
 		update();
 	}
 
@@ -43,8 +43,8 @@ public class TogglePresentationAction extends TextEditorAction {
 			if (remembered != null) {
 				editor.setHighlightRange(remembered.getOffset(), remembered.getLength(), true);
 			}
-			IPreferenceStore store = VelocityPlugin.getDefault().getPreferenceStore();
-			store.setValue(IPreferencesConstants.EDITOR_SHOW_SEGMENTS, showAll);
+			IPreferenceStore store = VelocityUIPlugin.getDefault().getPreferenceStore();
+			store.setValue(IVelocityPreferencesConstants.EDITOR_SHOW_SEGMENTS, showAll);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class TogglePresentationAction extends TextEditorAction {
 		super.setEditor(anEditor);
 
 		if (anEditor != null) {
-			IPreferenceStore store = VelocityPlugin.getDefault().getPreferenceStore();
-			boolean showSegments = store.getBoolean(IPreferencesConstants.EDITOR_SHOW_SEGMENTS);
+			IPreferenceStore store = VelocityUIPlugin.getDefault().getPreferenceStore();
+			boolean showSegments = store.getBoolean(IVelocityPreferencesConstants.EDITOR_SHOW_SEGMENTS);
 			if (anEditor.showsHighlightRangeOnly() != showSegments) {
 				IRegion remembered = anEditor.getHighlightRange();
 				anEditor.resetHighlightRange();

@@ -14,22 +14,24 @@ import org.eclipse.jface.text.rules.WordPatternRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 import org.vaulttec.velocity.core.model.Directive;
-import org.vaulttec.velocity.ui.IColorConstants;
-import org.vaulttec.velocity.ui.VelocityColorProvider;
+import org.vaulttec.velocity.ui.IVelocityPreferencesConstants;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.editor.VelocityEditorEnvironment;
 
 public class VelocityCodeScanner extends RuleBasedScanner {
 
-	public VelocityCodeScanner(VelocityColorProvider provider) {
+	public VelocityCodeScanner() {
 		List<IRule> rules = new ArrayList<IRule>();
 
 		// Add generic whitespace rule
 		rules.add(new WhitespaceRule(new WhitespaceDetector()));
 
 		// Add word rule for directives
-		Token token = new Token(new TextAttribute(provider.getColor(IColorConstants.DIRECTIVE)));
+		Token token = new Token(
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_DIRECTIVE)));
 		WordRule wordRule = new WordRule(new DirectiveDetector(), token);
-		token = new Token(new TextAttribute(provider.getColor(IColorConstants.DIRECTIVE), null, SWT.BOLD));
+		token = new Token(new TextAttribute(
+				VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_DIRECTIVE), null, SWT.BOLD));
 
 		// System directives
 		String[] directives = Directive.DIRECTIVES;
@@ -45,12 +47,14 @@ public class VelocityCodeScanner extends RuleBasedScanner {
 		rules.add(wordRule);
 
 		// Add pattern rule for formal references
-		token = new Token(new TextAttribute(provider.getColor(IColorConstants.REFERENCE)));
+		token = new Token(
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_REFERENCE)));
 		rules.add(new PatternRule("$!{", "}", token, (char) 0, true));
 		rules.add(new PatternRule("${", "}", token, (char) 0, true));
 
 		// Add pattern rule for shorthand references
-		token = new Token(new TextAttribute(provider.getColor(IColorConstants.REFERENCE)));
+		token = new Token(
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_REFERENCE)));
 		rules.add(new WordPatternRule(new IdentifierDetector(), "$!", null, token));
 		rules.add(new WordPatternRule(new IdentifierDetector(), "$", null, token));
 

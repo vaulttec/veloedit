@@ -4,7 +4,6 @@ import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.vaulttec.velocity.core.VelocityCorePlugin;
 import org.vaulttec.velocity.core.parser.VelocityParser;
-import org.vaulttec.velocity.ui.VelocityColorProvider;
 import org.vaulttec.velocity.ui.editor.text.VelocityCodeScanner;
 import org.vaulttec.velocity.ui.editor.text.VelocityDoubleClickStrategy;
 import org.vaulttec.velocity.ui.editor.text.VelocityStringScanner;
@@ -17,7 +16,6 @@ import org.vaulttec.velocity.ui.editor.text.VelocityStringScanner;
  */
 public class VelocityEditorEnvironment {
 
-	private static VelocityColorProvider colorProvider;
 	private static RuleBasedScanner codeScanner;
 	private static RuleBasedScanner stringScanner;
 	private static ITextDoubleClickStrategy doubleClickStrategy;
@@ -30,9 +28,8 @@ public class VelocityEditorEnvironment {
 	 */
 	public static void connect() {
 		if (++refCount == 1) {
-			colorProvider = new VelocityColorProvider();
-			codeScanner = new VelocityCodeScanner(colorProvider);
-			stringScanner = new VelocityStringScanner(colorProvider);
+			codeScanner = new VelocityCodeScanner();
+			stringScanner = new VelocityStringScanner();
 			doubleClickStrategy = new VelocityDoubleClickStrategy();
 		}
 	}
@@ -46,16 +43,7 @@ public class VelocityEditorEnvironment {
 			doubleClickStrategy = null;
 			stringScanner = null;
 			codeScanner = null;
-			colorProvider.dispose();
-			colorProvider = null;
 		}
-	}
-
-	/**
-	 * Returns the singleton color provider.
-	 */
-	public static VelocityColorProvider getColorProvider() {
-		return colorProvider;
 	}
 
 	/**

@@ -27,7 +27,7 @@ import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.core.parser.VelocityMacro;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.editor.actions.GotoDefinitionAction;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionConstants;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionDefinitionIds;
@@ -72,25 +72,25 @@ public class VelocityEditor extends TextEditor {
 		super.createActions();
 
 		// Add goto definition action
-		IAction action = new GotoDefinitionAction(VelocityPlugin.getDefault().getResourceBundle(),
+		IAction action = new GotoDefinitionAction(VelocityUIPlugin.getDefault().getResourceBundle(),
 				PREFIX + "GotoDefinition.", this);
 		action.setActionDefinitionId(IVelocityActionDefinitionIds.GOTO_DEFINITION);
 		setAction(IVelocityActionConstants.GOTO_DEFINITION, action);
 
 		// Add content assist propsal action
-		action = new ContentAssistAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "ContentAssist.",
+		action = new ContentAssistAction(VelocityUIPlugin.getDefault().getResourceBundle(), PREFIX + "ContentAssist.",
 				this);
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(IVelocityActionConstants.CONTENT_ASSIST, action);
 
 		// Add comment action
-		action = new TextOperationAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.", this,
+		action = new TextOperationAction(VelocityUIPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.", this,
 				ITextOperationTarget.PREFIX);
 		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
 		setAction(IVelocityActionConstants.COMMENT, action);
 
 		// Add uncomment action
-		action = new TextOperationAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Uncomment.", this,
+		action = new TextOperationAction(VelocityUIPlugin.getDefault().getResourceBundle(), PREFIX + "Uncomment.", this,
 				ITextOperationTarget.STRIP_PREFIX);
 		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);
 		setAction(IVelocityActionConstants.UNCOMMENT, action);
@@ -101,6 +101,7 @@ public class VelocityEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable.getAdapter(Class)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class clazz) {
 		Object adapter;
@@ -183,7 +184,7 @@ public class VelocityEditor extends TextEditor {
 				try {
 					line = document.getLineOfOffset(caret) + 1;
 				} catch (BadLocationException e) {
-					VelocityPlugin.log(e);
+					VelocityUIPlugin.log(e);
 				}
 			}
 		}
@@ -390,7 +391,7 @@ public class VelocityEditor extends TextEditor {
 			Position pos = new Position(getDocument().getLineOffset(line - 1));
 			getSourceViewer().getAnnotationModel().addAnnotation(new MarkerAnnotation(marker), pos);
 		} catch (Exception e) {
-			VelocityPlugin.log(e);
+			VelocityUIPlugin.log(e);
 		}
 	}
 

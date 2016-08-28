@@ -5,7 +5,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.vaulttec.velocity.ui;singleton:=true
 Bundle-Vendor: %providerName
 Bundle-ClassPath: velocityui.jar
-Bundle-Activator: org.vaulttec.velocity.ui.VelocityPlugin
+Bundle-Activator: org.vaulttec.velocity.ui.VelocityUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.vaulttec.velocity.ui,

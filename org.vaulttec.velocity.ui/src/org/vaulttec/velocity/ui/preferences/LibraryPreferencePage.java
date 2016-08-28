@@ -8,7 +8,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.vaulttec.velocity.core.IPreferencesConstants;
 import org.vaulttec.velocity.core.VelocityCorePlugin;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
  * Velocimacro library settings.
@@ -19,17 +19,17 @@ public class LibraryPreferencePage extends FieldEditorPreferencePage implements 
 	public LibraryPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
 		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, VelocityCorePlugin.PLUGIN_ID));
-		setDescription(VelocityPlugin.getMessage(PREFIX + "description"));
+		setDescription(VelocityUIPlugin.getMessage(PREFIX + "description"));
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		DirectoryFieldEditor macroPath = new DirectoryFieldEditor(IPreferencesConstants.LIBRARY_PATH,
-				VelocityPlugin.getMessage(PREFIX + "path"), getFieldEditorParent());
+				VelocityUIPlugin.getMessage(PREFIX + "path"), getFieldEditorParent());
 		addField(macroPath);
 
 		LibraryEditor library = new LibraryEditor(IPreferencesConstants.LIBRARY_LIST,
-				VelocityPlugin.getMessage(PREFIX + "libraryList"), macroPath, getFieldEditorParent());
+				VelocityUIPlugin.getMessage(PREFIX + "libraryList"), macroPath, getFieldEditorParent());
 		addField(library);
 	}
 
@@ -40,7 +40,7 @@ public class LibraryPreferencePage extends FieldEditorPreferencePage implements 
 	@Override
 	public boolean performOk() {
 		boolean value = super.performOk();
-		VelocityPlugin.getDefault().savePluginPreferences();
+		VelocityUIPlugin.getDefault().savePluginPreferences();
 		return value;
 	}
 }

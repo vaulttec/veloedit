@@ -15,7 +15,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionConstants;
 import org.vaulttec.velocity.ui.editor.actions.IVelocityActionDefinitionIds;
 import org.vaulttec.velocity.ui.editor.actions.TogglePresentationAction;
@@ -46,15 +46,15 @@ public class VelocityEditorActionContributor extends BasicTextEditorActionContri
 		togglePresentation = new TogglePresentationAction();
 
 		// Define text editor actions
-		gotoDefinition = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+		gotoDefinition = new RetargetTextEditorAction(VelocityUIPlugin.getDefault().getResourceBundle(),
 				PREFIX + "GotoDefinition.");
 		gotoDefinition.setActionDefinitionId(IVelocityActionDefinitionIds.GOTO_DEFINITION);
-		contentAssist = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+		contentAssist = new RetargetTextEditorAction(VelocityUIPlugin.getDefault().getResourceBundle(),
 				PREFIX + "ContentAssist.");
 		contentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		comment = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.");
+		comment = new RetargetTextEditorAction(VelocityUIPlugin.getDefault().getResourceBundle(), PREFIX + "Comment.");
 		comment.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
-		uncomment = new RetargetTextEditorAction(VelocityPlugin.getDefault().getResourceBundle(),
+		uncomment = new RetargetTextEditorAction(VelocityUIPlugin.getDefault().getResourceBundle(),
 				PREFIX + "Uncomment.");
 		uncomment.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);
 	}

@@ -14,8 +14,8 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
-import org.vaulttec.velocity.ui.IColorConstants;
-import org.vaulttec.velocity.ui.VelocityColorProvider;
+import org.vaulttec.velocity.ui.IVelocityPreferencesConstants;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.editor.text.IVelocityPartitions;
 import org.vaulttec.velocity.ui.editor.text.NonRuleBasedDamagerRepairer;
 
@@ -84,27 +84,30 @@ public class VelocitySourceViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-		VelocityColorProvider cp = VelocityEditorEnvironment.getColorProvider();
 		PresentationReconciler rec = new PresentationReconciler();
+		rec.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
 		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(VelocityEditorEnvironment.getCodeScanner());
 		rec.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		rec.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(
-				new TextAttribute(cp.getColor(IColorConstants.COMMENT)));
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_COMMENT)));
 		rec.setDamager(ndr, IVelocityPartitions.SINGLE_LINE_COMMENT);
 		rec.setRepairer(ndr, IVelocityPartitions.SINGLE_LINE_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.COMMENT)));
+		ndr = new NonRuleBasedDamagerRepairer(
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_COMMENT)));
 		rec.setDamager(ndr, IVelocityPartitions.MULTI_LINE_COMMENT);
 		rec.setRepairer(ndr, IVelocityPartitions.MULTI_LINE_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.DOC_COMMENT)));
+		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
+				VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_DOC_COMMENT)));
 		rec.setDamager(ndr, IVelocityPartitions.DOC_COMMENT);
 		rec.setRepairer(ndr, IVelocityPartitions.DOC_COMMENT);
 
-		ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(cp.getColor(IColorConstants.STRING)));
+		ndr = new NonRuleBasedDamagerRepairer(
+				new TextAttribute(VelocityUIPlugin.getPreferenceColor(IVelocityPreferencesConstants.COLOR_STRING)));
 		rec.setDamager(ndr, IVelocityPartitions.UNPARSED_STRING);
 		rec.setRepairer(ndr, IVelocityPartitions.UNPARSED_STRING);
 

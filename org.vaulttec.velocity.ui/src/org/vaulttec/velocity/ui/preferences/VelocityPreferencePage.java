@@ -8,7 +8,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.vaulttec.velocity.core.IPreferencesConstants;
 import org.vaulttec.velocity.core.VelocityCorePlugin;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
  * Velocity runtime settings, e.g. loop counter name.
@@ -19,18 +19,18 @@ public class VelocityPreferencePage extends FieldEditorPreferencePage implements
 	public VelocityPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
 		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, VelocityCorePlugin.PLUGIN_ID));
-		setDescription(VelocityPlugin.getMessage(PREFIX + "description"));
+		setDescription(VelocityUIPlugin.getMessage(PREFIX + "description"));
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		StringFieldEditor counterName = new StringFieldEditor(IPreferencesConstants.VELOCITY_COUNTER_NAME,
-				VelocityPlugin.getMessage(PREFIX + "counterName"), getFieldEditorParent());
+				VelocityUIPlugin.getMessage(PREFIX + "counterName"), getFieldEditorParent());
 		counterName.setEmptyStringAllowed(false);
 		addField(counterName);
 
 		DirectiveEditor directives = new DirectiveEditor(IPreferencesConstants.VELOCITY_USER_DIRECTIVES,
-				VelocityPlugin.getMessage(PREFIX + "userDirectives"), getFieldEditorParent());
+				VelocityUIPlugin.getMessage(PREFIX + "userDirectives"), getFieldEditorParent());
 		addField(directives);
 	}
 
@@ -41,7 +41,7 @@ public class VelocityPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk() {
 		boolean value = super.performOk();
-		VelocityPlugin.getDefault().savePluginPreferences();
+		VelocityUIPlugin.getDefault().savePluginPreferences();
 		return value;
 	}
 }

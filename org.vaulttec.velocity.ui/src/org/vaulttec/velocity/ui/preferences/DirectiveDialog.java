@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
  * Dialog used to define a Velocity user directive (name and type [block or
@@ -25,8 +25,8 @@ public class DirectiveDialog extends InputDialog {
 	private boolean fIsBlock;
 
 	public DirectiveDialog(Shell aShell) {
-		super(aShell, VelocityPlugin.getMessage(PREFIX + "title"),
-			   VelocityPlugin.getMessage(PREFIX + "message"), null, VALIDATOR);
+		super(aShell, VelocityUIPlugin.getMessage(PREFIX + "title"),
+			   VelocityUIPlugin.getMessage(PREFIX + "message"), null, VALIDATOR);
 	}
 
 	protected Control createDialogArea(Composite aParent) {
@@ -38,11 +38,11 @@ public class DirectiveDialog extends InputDialog {
 
 		Group group = new Group(composite, SWT.LEFT);
 		group.setFont(aParent.getFont());
-		group.setText(VelocityPlugin.getMessage(PREFIX + "typeGroup"));
+		group.setText(VelocityUIPlugin.getMessage(PREFIX + "typeGroup"));
 		group.setLayout(layout);
 
 		fLineButton = createRadioButton(group,
-							   VelocityPlugin.getMessage(PREFIX + "typeLine"));
+							   VelocityUIPlugin.getMessage(PREFIX + "typeLine"));
 		fLineButton.setSelection(!fIsBlock);
 		fLineButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -51,7 +51,7 @@ public class DirectiveDialog extends InputDialog {
 		});
 
 		fBlockButton = createRadioButton(group,
-							  VelocityPlugin.getMessage(PREFIX + "typeBlock"));
+							  VelocityUIPlugin.getMessage(PREFIX + "typeBlock"));
 		fBlockButton.setSelection(fIsBlock);
 		fBlockButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -95,7 +95,7 @@ public class DirectiveDialog extends InputDialog {
 			}
 			for (int i = aText.length() - 1; i >= 0; i--) {
 				if (!Character.isLetterOrDigit(aText.charAt(i))) {
-					return VelocityPlugin.getMessage(PREFIX + "error");
+					return VelocityUIPlugin.getMessage(PREFIX + "error");
 				}
 			}
 			return null;

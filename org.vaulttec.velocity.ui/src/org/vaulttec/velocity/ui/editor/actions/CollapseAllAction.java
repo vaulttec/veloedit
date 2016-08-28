@@ -2,7 +2,7 @@ package org.vaulttec.velocity.ui.editor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 import org.vaulttec.velocity.ui.VelocityPluginImages;
 
 public class CollapseAllAction extends Action {
@@ -10,9 +10,9 @@ public class CollapseAllAction extends Action {
 
 	public CollapseAllAction(AbstractTreeViewer aViewer) {
 		fViewer = aViewer;
-        setText(VelocityPlugin.getMessage(
+        setText(VelocityUIPlugin.getMessage(
 									"VelocityEditor.CollapseAllAction.label"));
-        setToolTipText(VelocityPlugin.getMessage(
+        setToolTipText(VelocityUIPlugin.getMessage(
 								  "VelocityEditor.CollapseAllAction.tooltip"));
         VelocityPluginImages.setLocalImageDescriptors(this, "collapseall.gif");
 	}

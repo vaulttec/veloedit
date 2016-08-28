@@ -4,8 +4,8 @@ import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vaulttec.velocity.ui.IPreferencesConstants;
-import org.vaulttec.velocity.ui.VelocityPlugin;
+import org.vaulttec.velocity.ui.IVelocityPreferencesConstants;
+import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
  * Color settings for syntax highliting.
@@ -16,35 +16,35 @@ public class EditorPreferencePage extends FieldEditorPreferencePage
 
 	public EditorPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
-		setPreferenceStore(VelocityPlugin.getDefault().getPreferenceStore());
-        setDescription(VelocityPlugin.getMessage(PREFIX + "description"));
+		setPreferenceStore(VelocityUIPlugin.getDefault().getPreferenceStore());
+        setDescription(VelocityUIPlugin.getMessage(PREFIX + "description"));
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	protected void createFieldEditors() {
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_DEFAULT,
-								 VelocityPlugin.getMessage(PREFIX + "default"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_DEFAULT,
+								 VelocityUIPlugin.getMessage(PREFIX + "default"),
 								 getFieldEditorParent()));
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_COMMENT,
-								 VelocityPlugin.getMessage(PREFIX + "comment"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_COMMENT,
+								 VelocityUIPlugin.getMessage(PREFIX + "comment"),
 								 getFieldEditorParent()));
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_DOC_COMMENT,
-							  VelocityPlugin.getMessage(PREFIX + "docComment"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_DOC_COMMENT,
+							  VelocityUIPlugin.getMessage(PREFIX + "docComment"),
 							  getFieldEditorParent()));
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_DIRECTIVE,
-							   VelocityPlugin.getMessage(PREFIX + "directive"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_DIRECTIVE,
+							   VelocityUIPlugin.getMessage(PREFIX + "directive"),
 							   getFieldEditorParent()));
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_STRING,
-								  VelocityPlugin.getMessage(PREFIX + "string"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_STRING,
+								  VelocityUIPlugin.getMessage(PREFIX + "string"),
 								  getFieldEditorParent()));
-		addField(new ColorFieldEditor(IPreferencesConstants.COLOR_REFERENCE,
-							   VelocityPlugin.getMessage(PREFIX + "reference"),
+		addField(new ColorFieldEditor(IVelocityPreferencesConstants.COLOR_REFERENCE,
+							   VelocityUIPlugin.getMessage(PREFIX + "reference"),
 							   getFieldEditorParent()));
 		addField(new ColorFieldEditor(
-        				 IPreferencesConstants.COLOR_STRING_REFERENCE,
-						 VelocityPlugin.getMessage(PREFIX + "stringReference"),
+        				 IVelocityPreferencesConstants.COLOR_STRING_REFERENCE,
+						 VelocityUIPlugin.getMessage(PREFIX + "stringReference"),
 						 getFieldEditorParent()));
     }
 
@@ -59,7 +59,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage
 	 */
 	public boolean performOk() {
         boolean value = super.performOk();
-        VelocityPlugin.getDefault().savePluginPreferences();
+        VelocityUIPlugin.getDefault().savePluginPreferences();
         return value;
     }
 }
