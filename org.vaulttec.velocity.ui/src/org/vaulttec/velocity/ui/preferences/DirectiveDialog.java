@@ -20,42 +20,44 @@ import org.vaulttec.velocity.ui.VelocityUIPlugin;
 public class DirectiveDialog extends InputDialog {
 	protected static String PREFIX = "VelocityPreferences.directive.dialog.";
 	protected static IInputValidator VALIDATOR = new DirectiveValidator();
-	private Button fLineButton;
-	private Button fBlockButton;
-	private boolean fIsBlock;
 
-	public DirectiveDialog(Shell aShell) {
-		super(aShell, VelocityUIPlugin.getMessage(PREFIX + "title"),
-			   VelocityUIPlugin.getMessage(PREFIX + "message"), null, VALIDATOR);
+	private Button lineButton;
+	private Button blockButton;
+	private boolean isBlock;
+
+	public DirectiveDialog(Shell shell) {
+		super(shell, VelocityUIPlugin.getMessage(PREFIX + "title"), VelocityUIPlugin.getMessage(PREFIX + "message"),
+				null, VALIDATOR);
 	}
 
-	protected Control createDialogArea(Composite aParent) {
-		Composite composite = (Composite)super.createDialogArea(aParent);
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent);
 
 		GridLayout layout = new GridLayout();
-		layout.horizontalSpacing = 8;	// Gap between label and control
+		layout.horizontalSpacing = 8; // Gap between label and control
 		layout.numColumns = 2;
 
 		Group group = new Group(composite, SWT.LEFT);
-		group.setFont(aParent.getFont());
+		group.setFont(parent.getFont());
 		group.setText(VelocityUIPlugin.getMessage(PREFIX + "typeGroup"));
 		group.setLayout(layout);
 
-		fLineButton = createRadioButton(group,
-							   VelocityUIPlugin.getMessage(PREFIX + "typeLine"));
-		fLineButton.setSelection(!fIsBlock);
-		fLineButton.addSelectionListener(new SelectionAdapter() {
+		lineButton = createRadioButton(group, VelocityUIPlugin.getMessage(PREFIX + "typeLine"));
+		lineButton.setSelection(!isBlock);
+		lineButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				fIsBlock = false;
+				isBlock = false;
 			}
 		});
 
-		fBlockButton = createRadioButton(group,
-							  VelocityUIPlugin.getMessage(PREFIX + "typeBlock"));
-		fBlockButton.setSelection(fIsBlock);
-		fBlockButton.addSelectionListener(new SelectionAdapter() {
+		blockButton = createRadioButton(group, VelocityUIPlugin.getMessage(PREFIX + "typeBlock"));
+		blockButton.setSelection(isBlock);
+		blockButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				fIsBlock = true;
+				isBlock = true;
 			}
 		});
 		return composite;
@@ -65,15 +67,16 @@ public class DirectiveDialog extends InputDialog {
 	 * Utility method that creates a radio button instance and sets the default
 	 * layout data.
 	 *
-	 * @param aParent  the parent for the new radio button
-	 * @param aLabel  the label for the new radio button
+	 * @param parent
+	 *            the parent for the new radio button
+	 * @param label
+	 *            the label for the new radio button
 	 * @return the newly-created radio button
 	 */
-	protected static Button createRadioButton(Composite aParent,
-												String aLabel) {
-		Button button = new Button(aParent, SWT.RADIO | SWT.LEFT);
-		button.setText(aLabel);
-		button.setFont(aParent.getFont());
+	protected static Button createRadioButton(Composite parent, String label) {
+		Button button = new Button(parent, SWT.RADIO | SWT.LEFT);
+		button.setText(label);
+		button.setFont(parent.getFont());
 		return button;
 	}
 
@@ -83,22 +86,25 @@ public class DirectiveDialog extends InputDialog {
 	 *
 	 * @return the input string and the selected type
 	 */
+	@Override
 	public String getValue() {
-		return super.getValue() + " [" + (fIsBlock ? "Block" : "Line") + ']';
+		return super.getValue() + " [" + (isBlock ? "Block" : "Line") + ']';
 	}
 
 	private static class DirectiveValidator implements IInputValidator {
 
-		public String isValid(String aText) {
-			if (aText.length() == 0) {
+		@Override
+		public String isValid(String text) {
+			if (text.length() == 0) {
 				return "";
 			}
-			for (int i = aText.length() - 1; i >= 0; i--) {
-				if (!Character.isLetterOrDigit(aText.charAt(i))) {
+			for (int i = text.length() - 1; i >= 0; i--) {
+				if (!Character.isLetterOrDigit(text.charAt(i))) {
 					return VelocityUIPlugin.getMessage(PREFIX + "error");
 				}
 			}
 			return null;
 		}
 	}
+
 }

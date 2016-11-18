@@ -2,6 +2,7 @@ package org.vaulttec.velocity.ui.preferences;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -13,34 +14,38 @@ import org.eclipse.swt.widgets.FileDialog;
  * A field editor to maintain a list of Velocimacro files.
  */
 public class LibraryEditor extends ListEditor {
-	private DirectoryFieldEditor fDirectory;
+	private DirectoryFieldEditor directory;
 
 	/**
 	 * Creates a new field editor.
 	 * 
-	 * @param aName the name of the preference this field editor works on
-	 * @param aLabelText  the label text of the field editor
-	 * @param aParent  the parent of the field editor's control
+	 * @param name
+	 *            the name of the preference this field editor works on
+	 * @param labelText
+	 *            the label text of the field editor
+	 * @param parent
+	 *            the parent of the field editor's control
 	 */
-	public LibraryEditor(String aName, String aLabelText,
-						  DirectoryFieldEditor aDirectory, Composite aParent) {
-		init(aName, aLabelText);
-		fDirectory = aDirectory;
-		createControl(aParent);
+	public LibraryEditor(String name, String labelText, DirectoryFieldEditor directory, Composite parent) {
+		init(name, labelText);
+		this.directory = directory;
+		createControl(parent);
 	}
 
-	protected String createList(String[] aDirectives) {
-		StringBuffer directives = new StringBuffer();
-		for (int i = 0; i < aDirectives.length; i++) {
-			directives.append(aDirectives[i]);
-			directives.append(',');
+	@Override
+	protected String createList(String[] directives) {
+		StringBuffer directivesList = new StringBuffer();
+		for (int i = 0; i < directives.length; i++) {
+			directivesList.append(directives[i]);
+			directivesList.append(',');
 		}
-		return directives.toString();
+		return directivesList.toString();
 	}
 
+	@Override
 	protected String getNewInputObject() {
 		FileDialog dialog = new FileDialog(getShell());
-		dialog.setFilterPath(fDirectory.getStringValue());
+		dialog.setFilterPath(directory.getStringValue());
 		String library = dialog.open();
 		if (library != null) {
 			library = new File(library).getName();
@@ -48,12 +53,14 @@ public class LibraryEditor extends ListEditor {
 		return library;
 	}
 
-	protected String[] parseString(String aDirectivesList) {
-		StringTokenizer st = new StringTokenizer(aDirectivesList, ",\n\r");
-		ArrayList v = new ArrayList();
-		while (st.hasMoreElements()) {
-			v.add(st.nextElement());
+	@Override
+	protected String[] parseString(String directivesList) {
+		StringTokenizer st = new StringTokenizer(directivesList, ",\n\r");
+		List<String> directives = new ArrayList<String>();
+		while (st.hasMoreTokens()) {
+			directives.add(st.nextToken());
 		}
-		return (String[])v.toArray(new String[v.size()]);
+		return directives.toArray(new String[directives.size()]);
 	}
+
 }
