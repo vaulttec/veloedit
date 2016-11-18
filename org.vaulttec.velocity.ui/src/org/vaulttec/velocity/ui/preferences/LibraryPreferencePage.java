@@ -37,10 +37,4 @@ public class LibraryPreferencePage extends FieldEditorPreferencePage implements 
 	public void init(IWorkbench workbench) {
 	}
 
-	@Override
-	public boolean performOk() {
-		boolean value = super.performOk();
-		VelocityUIPlugin.getDefault().savePluginPreferences();
-		return value;
-	}
 }

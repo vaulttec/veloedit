@@ -13,15 +13,12 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -33,14 +30,7 @@ public class VelocityUIPlugin extends AbstractUIPlugin {
 	 * <code>"org.vaulttec.velocity.ui"</code>).
 	 */
 	public static final String PLUGIN_ID = "org.vaulttec.velocity.ui";
-
-	/** The shared instance. */
 	private static VelocityUIPlugin plugin;
-
-	/**
-	 * The combined preference store.
-	 */
-	private IPreferenceStore combinedPreferenceStore;
 
 	private static final String RESOURCE_NAME = PLUGIN_ID + ".messages";
 	private ResourceBundle resourceBundle;
@@ -55,15 +45,6 @@ public class VelocityUIPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		try {
-			VelocityColorManager.getDefault().dispose();
-		} finally {
-			super.stop(context);
-		}
-	}
-
 	/**
 	 * Returns the shared instance.
 	 */
@@ -72,22 +53,11 @@ public class VelocityUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns a combined preference store, this store is read-only.
-	 */
-	public IPreferenceStore getCombinedPreferenceStore() {
-		if (combinedPreferenceStore == null) {
-			combinedPreferenceStore = new ChainedPreferenceStore(
-					new IPreferenceStore[] { getPreferenceStore(), EditorsUI.getPreferenceStore() });
-		}
-		return combinedPreferenceStore;
-	}
-
-	/**
 	 * Returns the preference color, identified by the given name.
 	 */
 	public static Color getPreferenceColor(String name) {
-		return VelocityColorManager.getDefault()
-				.getColor(PreferenceConverter.getColor(getDefault().getCombinedPreferenceStore(), name));
+		return EditorsUI.getSharedTextColors()
+				.getColor(PreferenceConverter.getColor(getDefault().getPreferenceStore(), name));
 	}
 
 	/**

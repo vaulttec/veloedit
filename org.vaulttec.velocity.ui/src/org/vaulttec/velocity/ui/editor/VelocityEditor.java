@@ -8,6 +8,7 @@ import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -19,6 +20,7 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -35,6 +37,7 @@ import org.vaulttec.velocity.ui.editor.outline.VelocityOutlinePage;
 import org.vaulttec.velocity.ui.editor.text.VelocityTextGuesser;
 
 public class VelocityEditor extends TextEditor {
+
 	private static final String PREFIX = "VelocityEditor.";
 
 	private final ModelTools modelTools;
@@ -55,9 +58,12 @@ public class VelocityEditor extends TextEditor {
 	@Override
 	protected void initializeEditor() {
 		VelocityEditorEnvironment.connect();
-		
+
 		super.initializeEditor();
 
+		IPreferenceStore store = new ChainedPreferenceStore(
+				new IPreferenceStore[] { VelocityUIPlugin.getDefault().getPreferenceStore(), getPreferenceStore() });
+		setPreferenceStore(store);
 		setDocumentProvider(new VelocityDocumentProvider());
 		setSourceViewerConfiguration(new VelocitySourceViewerConfiguration(this));
 	}
