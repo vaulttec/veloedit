@@ -49,7 +49,7 @@
 	<properties>
 		<java-version>1.7</java-version>
 		<maven-version>3.0</maven-version>
-		<tycho-version>0.25.0</tycho-version>
+		<tycho-version>0.26.0</tycho-version>
 		<tycho-test-platformArgs></tycho-test-platformArgs>
 		<tycho-test-jvmArgs>-Xmx512m -XX:MaxPermSize=256m
 			${tycho.test.platformArgs}</tycho-test-jvmArgs>
