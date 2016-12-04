@@ -1,12 +1,14 @@
-# Velocity UI for Eclipse
+# Velocity Editor for Eclipse
 
 This project leverages the [Eclipse platform](http://www.eclipse.org/) by adding support for the template/scripting
 engine [Apache Velocity](http://velocity.apache.org).
 
-It uses the Velocity binaries (currently v1.7.0) to provide a Velocity-aware text editor (associated to files with extensions `*.vsl` or `*.vm`) with outline view.
+It uses the parser of the [Velocity engine](http://velocity.apache.org/engine/) (currently v1.7.0) to provide a Velocity-aware text editor with outline view.
 
 ![Velocity Editor](/../images/screenshots/Editor.png?raw=true")
-	
+
+The editor is associated to files with the extensions `*.vsl` or `*.vm`. This is defined in a content type available from `Preferences > General > Content Type > Text > Velocity Template`. Additional file name extensions can be specified here as well.
+
 
 ## Editor Features
 
@@ -26,6 +28,7 @@ It uses the Velocity binaries (currently v1.7.0) to provide a Velocity-aware tex
 ## Installation
 
 Online updates are available from [https://raw.githubusercontent.com/vaulttec/veloedit/updatesite/](https://raw.githubusercontent.com/vaulttec/veloedit/updatesite/).
-Define a site bookmark in Eclipse's Update Manager view ([Screenshot](../images/screenshots/UpdateSiteBookmark.png?raw=true)), navigate to the update site via this bookmark ([Screenshot](../images/screenshots/UpdateSitePreview.png?raw=true)) and install the Velocity UI feature.
+
+To install the plugin use this URL in Eclipse's Update Manager (`Help > Install New Software`) or drag the following badge to your running Eclipse workspace (requires [Eclipse Marketplace Plugin](http://www.eclipse.org/mpc/)):
 
 <a href="http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=2985127" class="drag" title="Drag to your running Eclipse workspace to install veloedit"><img class="img-responsive" src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png" alt="Drag to your running Eclipse workspace to install veloedit" /></a>
