@@ -4,7 +4,7 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/mars/201506241002/"/>
+<repository location="http://download.eclipse.org/releases/neon/201610111000/"/>
 </location>
 </locations>
 </target>
