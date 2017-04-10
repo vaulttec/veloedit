@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.vaulttec.velocity</groupId>
 	<artifactId>org.vaulttec.velocity.parent</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>org.vaulttec.velocity :: parent</name>
 	<description>Eclipse editor for the Velocity Template Language (VTL)</description>

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.7.qualifier
+Bundle-Version: 1.0.8.qualifier
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.vaulttec.velocity.ui;singleton:=true
 Bundle-Vendor: %providerName
