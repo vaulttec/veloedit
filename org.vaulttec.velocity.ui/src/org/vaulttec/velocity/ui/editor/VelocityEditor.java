@@ -80,7 +80,7 @@ public class VelocityEditor extends TextEditor {
 				new IPreferenceStore[] { VelocityUIPlugin.getDefault().getPreferenceStore(), getPreferenceStore() });
 		setPreferenceStore(store);
 		setDocumentProvider(new VelocityDocumentProvider());
-		setSourceViewerConfiguration(new VelocitySourceViewerConfiguration(this));
+		setSourceViewerConfiguration(new VelocitySourceViewerConfiguration(this, store));
 	}
 
 	@Override

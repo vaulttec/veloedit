@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.vaulttec.velocity.ui.editor;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -38,7 +39,8 @@ public class VelocitySourceViewerConfiguration extends TextSourceViewerConfigura
 
 	private final VelocityEditor editor;
 
-	public VelocitySourceViewerConfiguration(VelocityEditor editor) {
+	public VelocitySourceViewerConfiguration(VelocityEditor editor, IPreferenceStore store) {
+		super(store);
 		this.editor = editor;
 	}
 
