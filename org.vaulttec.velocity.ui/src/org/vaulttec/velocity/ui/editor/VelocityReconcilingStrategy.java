@@ -23,15 +23,11 @@ import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IFileEditorInput;
 import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.core.model.Template;
 import org.vaulttec.velocity.core.parser.NodeVisitor;
@@ -42,104 +38,104 @@ import org.vaulttec.velocity.ui.VelocityUIPlugin;
  * template) on a document change.
  */
 public class VelocityReconcilingStrategy implements IReconcilingStrategy {
-	private VelocityEditor fEditor;
-    private Template fTemplate;
-    private Template fLastTemplate;
-	private String fError;
 
-	public VelocityReconcilingStrategy(VelocityEditor anEditor) {
-		fEditor = anEditor;
+	private final VelocityEditor editor;
+	private Template template;
+	private Template lastTemplate;
+	private String error;
+
+	public VelocityReconcilingStrategy(VelocityEditor editor) {
+		this.editor = editor;
 	}
 
-	public void setDocument(IDocument aDocument) {
+	public void setDocument(IDocument document) {
 		parse();
 	}
 
-	public void reconcile(DirtyRegion aDirtyRegion, IRegion aRegion) {
+	public void reconcile(DirtyRegion dirtyRegion, IRegion region) {
 		parse();
 	}
 
-	public void reconcile(IRegion aPartition) {
+	public void reconcile(IRegion partition) {
 		parse();
 	}
 
 	private void parse() {
-		IFile file = ((IFileEditorInput)fEditor.getEditorInput()).getFile(); 
-		String name = file.getName();
-		Reader reader = new StringReader(fEditor.getDocument().get());
-		Template template = null;
+		editor.deleteAllProblemMarkers();
+
+		String name = editor.getEditorInput().getName();
+		Reader reader = new StringReader(editor.getDocument().get());
+		Template newTemplate = null;
 		try {
-			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			RuntimeInstance runtime = VelocityEditorEnvironment.getParser();
 			SimpleNode root = runtime.parse(reader, name);
 
-			// Create tree model			
+			// Create tree model
 			NodeVisitor visitor = new NodeVisitor(name);
 			root.jjtAccept(visitor, null);
-			template = visitor.getTemplate();
-			fError = "";
+			newTemplate = visitor.getTemplate();
+			error = "";
 		} catch (ParseException e) {
 			if (e.getMessage() != null) {
-				fError = e.getMessage();
+				error = e.getMessage();
 				Token token = e.currentToken;
 				if (token != null) {
-					fEditor.addProblemMarker(e.getMessage(),
-											 token.next.beginLine);
+					editor.addProblemMarker(e.getMessage(), token.next.beginLine);
 				}
 			} else {
-				fError = "";
+				error = "";
 			}
 		} catch (Exception e) {
-			fError = "";
+			error = "";
 			VelocityUIPlugin.log(e);
-        } finally {
-        	try {
-				reader.close();        
-        	} catch (IOException e) {
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
 				VelocityUIPlugin.log(e);
-        	}
+			}
 		}
 
 		// Replace saved template with the new parsed one
 		synchronized (this) {
-        	if (template != null) {
-				fTemplate = template;
+			if (newTemplate != null) {
+				template = newTemplate;
 
 				// Save last successful parse tree
-				fLastTemplate = template;
-        	} else {
-        		fTemplate = null;
-        	}
+				lastTemplate = newTemplate;
+			} else {
+				template = null;
+			}
 		}
 
 		// Update outline view and display error message in status line
 		Display.getDefault().syncExec(new Runnable() {
-			public void run(){	
-				fEditor.updateOutlinePage();
-				fEditor.displayErrorMessage(fError);
+			public void run() {
+				editor.updateOutlinePage();
+				editor.displayErrorMessage(error);
 			}
 		});
 	}
 
 	/**
 	 * Returns root elements of current parse tree.
-	 */    
-    public Object[] getRootElements() {
-		return (fTemplate != null ? fTemplate.getChildren() :
-									 ITreeNode.NO_CHILDREN);
-    }
+	 */
+	public Object[] getRootElements() {
+		return (template != null ? template.getChildren() : ITreeNode.NO_CHILDREN);
+	}
 
 	/**
 	 * Returns root node of current parse tree.
-	 */    
-    public ITreeNode getRootNode() {
-        return fTemplate;
-    }
+	 */
+	public ITreeNode getRootNode() {
+		return template;
+	}
 
 	/**
 	 * Returns last successful parse tree.
-	 */    
-    public ITreeNode getLastRootNode() {
-        return fLastTemplate;
-    }
+	 */
+	public ITreeNode getLastRootNode() {
+		return lastTemplate;
+	}
+
 }

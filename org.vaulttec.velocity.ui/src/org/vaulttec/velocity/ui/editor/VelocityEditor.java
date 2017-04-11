@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -255,7 +256,7 @@ public class VelocityEditor extends TextEditor {
 			if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
 				VelocityMacro macro = VelocityEditorEnvironment.getParser().getLibraryMacro(guess.getText());
 				if (macro != null) {
-					String template = ((IFileEditorInput) getEditorInput()).getFile().getName();
+					String template = getEditorInput().getName();
 					if (!macro.getTemplate().equals(template)) {
 						StringBuffer buf = new StringBuffer();
 						buf.append("#macro (");
@@ -292,7 +293,7 @@ public class VelocityEditor extends TextEditor {
 			if (guess.getType() == VelocityTextGuesser.TYPE_DIRECTIVE) {
 				VelocityMacro macro = VelocityEditorEnvironment.getParser().getLibraryMacro(guess.getText());
 				if (macro != null) {
-					String template = ((IFileEditorInput) getEditorInput()).getFile().getName();
+					String template = getEditorInput().getName();
 					if (!macro.getTemplate().equals(template)) {
 						return;
 					}
@@ -403,16 +404,30 @@ public class VelocityEditor extends TextEditor {
 	}
 
 	public void addProblemMarker(String message, int line) {
-		IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-		try {
-			IMarker marker = file.createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.LINE_NUMBER, line);
-			Position pos = new Position(getDocument().getLineOffset(line - 1));
-			getSourceViewer().getAnnotationModel().addAnnotation(new MarkerAnnotation(marker), pos);
-		} catch (Exception e) {
-			VelocityUIPlugin.log(e);
+		if (getEditorInput() instanceof IFileEditorInput) {
+			IFile file = getEditorInput().getAdapter(IFile.class);
+			try {
+				IMarker marker = file.createMarker(IMarker.PROBLEM);
+				marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				marker.setAttribute(IMarker.MESSAGE, message);
+				marker.setAttribute(IMarker.LINE_NUMBER, line);
+				Position pos = new Position(getDocument().getLineOffset(line - 1));
+				getSourceViewer().getAnnotationModel().addAnnotation(new MarkerAnnotation(marker), pos);
+			} catch (Exception e) {
+				VelocityUIPlugin.log(e);
+			}
+		}
+	}
+
+	public void deleteAllProblemMarkers() {
+		if (getEditorInput() instanceof IFileEditorInput) {
+			IFile file = getEditorInput().getAdapter(IFile.class);
+			try {
+				file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+			} catch (Exception e) {
+				VelocityUIPlugin.log(e);
+			}
+
 		}
 	}
 
