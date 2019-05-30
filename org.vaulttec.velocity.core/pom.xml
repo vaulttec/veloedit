@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.vaulttec.velocity</groupId>
 		<artifactId>org.vaulttec.velocity.parent</artifactId>
-		<version>1.0.8-SNAPSHOT</version>
+		<version>1.0.9-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.vaulttec.velocity.core</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -18,23 +18,23 @@
 				<artifactId>javacc-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>jjtree-javacc</id>
 						<goals>
 							<goal>jjtree-javacc</goal>
 						</goals>
+						<!-- from https://github.com/apache/velocity-engine/blob/trunk/velocity-engine-core/pom.xml -->
 						<configuration>
-							<jdkVersion>1.4</jdkVersion>
+							<isStatic>false</isStatic>
+							<buildParser>true</buildParser>
+							<multi>true</multi>
+							<jdkVersion>${maven.compiler.target}</jdkVersion>
 							<buildNodeFiles>false</buildNodeFiles>
-							<sourceDirectory>javacc</sourceDirectory>
+							<nodeUsesParser>true</nodeUsesParser>
+							<tokenManagerUsesParser>true</tokenManagerUsesParser>
+							<sourceDirectory>${basedir}/javacc</sourceDirectory>
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>net.java.dev.javacc</groupId>
-						<artifactId>javacc</artifactId>
-						<version>4.2</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>

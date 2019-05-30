@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.velocity.runtime.directive.Macro.MacroArg;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -108,16 +109,16 @@ public class VelocityCompletionProcessor implements IContentAssistProcessor {
 				buffer.append('#');
 				buffer.append(name);
 				buffer.append('(');
-				if (macro.getArguments().length == 1) {
+				if (macro.getArguments().size() == 1) {
 					cursorPos = insert.length();
 					buffer.append(')');
 				} else {
 					cursorPos = insert.length() - 1;
-					String args[] = macro.getArguments();
-					for (int i = 1; i < args.length; i++) {
+					List<MacroArg> args = macro.getArguments();
+					for (int i = 1; i < args.size(); i++) {
 						buffer.append('$');
-						buffer.append(args[i]);
-						if (i < (args.length - 1)) {
+						buffer.append(args.get(i));
+						if (i < (args.size() - 1)) {
 							buffer.append(" ");
 						}
 					}

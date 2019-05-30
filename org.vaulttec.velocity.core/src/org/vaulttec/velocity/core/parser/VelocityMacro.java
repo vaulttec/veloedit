@@ -15,30 +15,35 @@
  *******************************************************************************/
 package org.vaulttec.velocity.core.parser;
 
+import java.util.List;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.runtime.directive.Macro;
+
 /**
  * Container used to store Velocity macro information.
  */
 public class VelocityMacro {
-	protected String fName;
-	protected String[] fArguments;
-	protected String fTemplate;
+	protected String name;
+	protected List<Macro.MacroArg> arguments;
+	protected Template template;
 
-	public VelocityMacro(String aName, String[] anArguments,
-														    String aTemplate) {
-		fName = aName;
-		fArguments = anArguments;
-		fTemplate = aTemplate;
+	public VelocityMacro(String name, List<Macro.MacroArg> arguments, Template template) {
+		this.name = name;
+		this.arguments = arguments;
+		this.template = template;
 	}
 
 	public String getName() {
-		return fName;
+		return name;
 	}
 
-	public String[] getArguments() {
-		return fArguments;
+	public List<Macro.MacroArg> getArguments() {
+		return arguments;
 	}
 
-	public String getTemplate() {
-		return fTemplate;
+	public Template getTemplate() {
+		return template;
 	}
+
 }

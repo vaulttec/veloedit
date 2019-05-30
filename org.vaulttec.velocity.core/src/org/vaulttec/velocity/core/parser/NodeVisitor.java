@@ -35,13 +35,13 @@ import org.vaulttec.velocity.core.model.Template;
 
 public class NodeVisitor extends BaseVisitor {
 
-	private String name;
+	private org.apache.velocity.Template velocityTemplate;
 	private Template template;
 	private Stack<IBlock> blocks = new Stack<>();
 	private IBlock currentBlock;
 
-	public NodeVisitor(String name) {
-		this.name = name;
+	public NodeVisitor(org.apache.velocity.Template velocityTemplate) {
+		this.velocityTemplate = velocityTemplate;
 	}
 
 	public Template getTemplate() {
@@ -50,7 +50,7 @@ public class NodeVisitor extends BaseVisitor {
 
 	@Override
 	public Object visit(ASTprocess node, Object data) {
-		template = new Template(name);
+		template = new Template(velocityTemplate.getName());
 		currentBlock = template;
 		return super.visit(node, data);
 	}
@@ -97,7 +97,7 @@ public class NodeVisitor extends BaseVisitor {
 		case Directive.TYPE_MACRO_CALL:
 
 			// Check if an already defined macro is referenced
-			if (VelocityCorePlugin.getParser().isVelocimacro(name, template.getName())) {
+			if (VelocityCorePlugin.getParser().isVelocimacro(name, velocityTemplate)) {
 				id = "";
 			} else {
 				id = null;

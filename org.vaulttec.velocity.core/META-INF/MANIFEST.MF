@@ -1,11 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 1.0.9.qualifier
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.vaulttec.velocity.core;singleton:=true
 Bundle-Vendor: %providerName
 Bundle-ClassPath: velocitycore.jar,
- velocity-1.7-dep-without-parser.jar
+ velocity-engine-core-2.1-without-parser.jar,
+ slf4j-api-1.7.26.jar,
+ commons-lang3-3.9.jar
 Bundle-Localization: plugin
 Export-Package: org.apache.velocity,
  org.apache.velocity.runtime,
@@ -17,6 +19,7 @@ Export-Package: org.apache.velocity,
  org.vaulttec.velocity.core.parser
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.vaulttec.velocity.core.VelocityCorePlugin
+Automatic-Module-Name: org.vaulttec.velocity.core

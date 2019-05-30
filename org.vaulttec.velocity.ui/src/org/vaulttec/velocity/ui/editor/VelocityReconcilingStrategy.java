@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
@@ -31,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.vaulttec.velocity.core.model.ITreeNode;
 import org.vaulttec.velocity.core.model.Template;
 import org.vaulttec.velocity.core.parser.NodeVisitor;
+import org.vaulttec.velocity.core.parser.VelocityParser;
 import org.vaulttec.velocity.ui.VelocityUIPlugin;
 
 /**
@@ -67,11 +67,12 @@ public class VelocityReconcilingStrategy implements IReconcilingStrategy {
 		Reader reader = new StringReader(editor.getDocument().get());
 		Template newTemplate = null;
 		try {
-			RuntimeInstance runtime = VelocityEditorEnvironment.getParser();
-			SimpleNode root = runtime.parse(reader, name);
+			VelocityParser parser = VelocityEditorEnvironment.getParser();
+			org.apache.velocity.Template velocityTemplate = parser.createTemplate(name);
+			SimpleNode root = parser.parse(reader, velocityTemplate);
 
 			// Create tree model
-			NodeVisitor visitor = new NodeVisitor(name);
+			NodeVisitor visitor = new NodeVisitor(velocityTemplate);
 			root.jjtAccept(visitor, null);
 			newTemplate = visitor.getTemplate();
 			error = "";

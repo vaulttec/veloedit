@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.vaulttec.velocity</groupId>
 	<artifactId>org.vaulttec.velocity.parent</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>org.vaulttec.velocity :: parent</name>
 	<description>Eclipse editor for the Velocity Template Language (VTL)</description>
@@ -42,17 +42,12 @@
 		</developer>
 	</developers>
 
-	<prerequisites>
-		<maven>3.0</maven>
-	</prerequisites>
-
 	<properties>
-		<java-version>1.7</java-version>
-		<maven-version>3.0</maven-version>
-		<tycho-version>1.0.0</tycho-version>
+		<java-version>1.8</java-version>
+		<maven-version>3.0.5</maven-version>
+		<tycho-version>1.4.0</tycho-version>
 		<tycho-test-platformArgs></tycho-test-platformArgs>
-		<tycho-test-jvmArgs>-Xmx512m -XX:MaxPermSize=256m
-			${tycho.test.platformArgs}</tycho-test-jvmArgs>
+		<tycho-test-jvmArgs>-Xmx512m -XX:MaxPermSize=256m ${tycho.test.platformArgs}</tycho-test-jvmArgs>
 
 		<maven.compiler.source>${java-version}</maven.compiler.source>
 		<maven.compiler.target>${java-version}</maven.compiler.target>
@@ -121,7 +116,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>

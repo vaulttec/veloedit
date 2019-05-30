@@ -16,40 +16,41 @@
 package org.vaulttec.velocity.core.model;
 
 public abstract class AbstractTreeNode implements ITreeNode {
-	private ITreeNode fParent;
-	private int fStartLine;
-	private int fEndLine;
-	
-	protected AbstractTreeNode(ITreeNode aParent, int aStartLine,
-								int anEndLine) {
-	    fParent = aParent;
-	    fStartLine = aStartLine;
-	    fEndLine = anEndLine;
+
+	private ITreeNode parent;
+	private int startLine;
+	private int endLine;
+
+	protected AbstractTreeNode(ITreeNode parent, int startLine, int endLine) {
+		this.parent = parent;
+		this.startLine = startLine;
+		this.endLine = endLine;
 	}
 
 	/**
 	 * @see ITreeNode#getName()
 	 */
 	public abstract String getName();
-	
+
 	/**
 	 * @see ITreeNode#getParent()
 	 */
 	public Object getParent() {
-	    return fParent;
+		return parent;
 	}
-	
-    /**
-     * @see ITreeNodeInfo#getStartLine()
-     */
+
+	/**
+	 * @see ITreeNodeInfo#getStartLine()
+	 */
 	public int getStartLine() {
-	    return fStartLine;
+		return startLine;
 	}
-	
-    /**
-     * @see ITreeNodeInfo#getEndLine()
-     */
+
+	/**
+	 * @see ITreeNodeInfo#getEndLine()
+	 */
 	public int getEndLine() {
-	    return fEndLine;
+		return endLine;
 	}
+
 }

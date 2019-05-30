@@ -22,9 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.velocity.Template;
 import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.runtime.directive.Directive;
-import org.apache.velocity.runtime.log.NullLogChute;
+import org.apache.velocity.runtime.directive.Macro;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.vaulttec.velocity.core.IPreferencesConstants;
@@ -58,8 +59,6 @@ public class VelocityParser extends RuntimeInstance {
 		setProperty(FILE_RESOURCE_LOADER_PATH, preferences.get(IPreferencesConstants.LIBRARY_PATH, ""));
 		setProperty(VM_LIBRARY, preferences.get(IPreferencesConstants.LIBRARY_LIST, ""));
 
-		// Disable Velocity logging
-		setProperty(RUNTIME_LOG_LOGSYSTEM_CLASS, NullLogChute.class.getCanonicalName());
 		setProperty(PARSER_POOL_SIZE, 0);
 		
 		// Initialize user directives
@@ -95,13 +94,22 @@ public class VelocityParser extends RuntimeInstance {
 	}
 
 	/**
+	 * Returns a new Velocity template with given name.
+	 */
+	public Template createTemplate(String name) {
+		Template template = new Template();
+		template.setName(name);
+		return template;
+	}
+
+	/**
 	 * Hooks into internal parser initialization to build a list of macros known
 	 * to the Velocity engine.
 	 */
 	@Override
-	public boolean addVelocimacro(String name, Node macro, String argArray[], String sourceTemplate) {
-		macros.put(name, new VelocityMacro(name, argArray, sourceTemplate));
-		return super.addVelocimacro(name, macro, argArray, sourceTemplate);
+	public boolean addVelocimacro(String name, Node macro, List<Macro.MacroArg> macroArgs, Template definingTemplate) {
+		macros.put(name, new VelocityMacro(name, macroArgs, definingTemplate));
+		return super.addVelocimacro(name, macro, macroArgs, definingTemplate);
 	}
 
 }
